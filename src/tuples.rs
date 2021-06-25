@@ -80,6 +80,19 @@ impl std::ops::Sub<Tuple> for Tuple {
     }
 }
 
+impl std::ops::Neg for Tuple {
+    type Output = Tuple;
+    fn neg(self) -> Self::Output {
+        assert_ne!(true, self.is_point(), "Cannot negate a point");
+        Tuple {
+            x: -1.0 * self.x,
+            y: -1.0 * self.y,
+            z: -1.0 * self.z,
+            w: self.w, // No need to negate this since it will remain 0 for vector
+        }
+    }
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;
@@ -156,6 +169,11 @@ mod tests {
         let v2_3 = vector(5.0, 6.0, 7.0);
         let expected_3 = vector(-2.0, -4.0, -6.0);
         assert_eq!(expected_3, v1_3 - v2_3);
+
+        let zero = vector(0.0, 0.0, 0.0);
+        let v_4 = vector(1.0, -2.0, 3.0);
+        let expected_4 = vector(-1.0, 2.0, -3.0);
+        assert_eq!(expected_4, zero - v_4);
     }
 
     #[test]
@@ -164,5 +182,19 @@ mod tests {
         let a1 = vector(3.0, -2.0, 5.0);
         let a2 = point(-2.0, 3.0, 1.0);
         let _ = a1 - a2;
+    }
+
+    #[test]
+    fn test_negate() {
+        let a = vector(1.0, -2.0, 3.0);
+        let expected = vector(-1.0, 2.0, -3.0);
+        assert_eq!(expected, -a);
+    }
+
+    #[test]
+    #[should_panic]
+    fn test_fail_point_negate() {
+        let a = point(1.0, -2.0, 3.0);
+        let _ = -a;
     }
 }
