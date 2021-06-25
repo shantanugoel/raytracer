@@ -1,3 +1,5 @@
+use crate::utils;
+
 #[allow(unused)]
 struct Tuple {
     x: f32,
@@ -13,10 +15,9 @@ enum TupleType {
 }
 
 fn get_tuple_type(input: &Tuple) -> TupleType {
-    if f32::EPSILON < 1.0 - input.w {
-        TupleType::Vector
-    } else {
-        TupleType::Point
+    match utils::is_eq_float(&input.w, &1.0) {
+        true => TupleType::Point,
+        false => TupleType::Vector,
     }
 }
 
