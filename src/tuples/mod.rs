@@ -85,10 +85,10 @@ impl std::ops::Neg for Tuple {
     fn neg(self) -> Self::Output {
         assert_ne!(true, self.is_point(), "Cannot negate a point");
         Tuple {
-            x: -1.0 * self.x,
-            y: -1.0 * self.y,
-            z: -1.0 * self.z,
-            w: self.w, // No need to negate this since it will remain 0 for vector
+            x: -self.x,
+            y: -self.y,
+            z: -self.z,
+            w: -self.w,
         }
     }
 }
