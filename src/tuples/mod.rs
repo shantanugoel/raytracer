@@ -47,6 +47,10 @@ impl Tuple {
     fn is_vector(self: &Self) -> bool {
         self.get_tuple_type() == TupleType::Vector
     }
+
+    fn magnitude(self: &Self) -> f64 {
+        (self.x * self.x + self.y * self.y + self.z * self.z).sqrt()
+    }
 }
 
 impl std::ops::Add<Tuple> for Tuple {

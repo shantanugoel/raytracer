@@ -116,3 +116,21 @@ fn test_divide() {
     let expected_2 = Tuple::new(0.5, -1.0, 1.5, 1.0);
     assert_eq!(expected_2, a / 2.0);
 }
+
+#[test]
+
+fn test_magnitude() {
+    let test_vector = vec![
+        vector(1.0, 0.0, 0.0),
+        vector(0.0, 1.0, 0.0),
+        vector(0.0, 0.0, 1.0),
+    ];
+    for v in test_vector {
+        assert!(is_eq_float(&1.0, &v.magnitude()))
+    }
+
+    let v1 = vector(1.0, 2.0, 3.0);
+    let v2 = vector(-1.0, -2.0, -3.0);
+    assert!(is_eq_float(&14.0_f64.sqrt(), &v1.magnitude()));
+    assert!(is_eq_float(&v1.magnitude(), &v2.magnitude()));
+}
