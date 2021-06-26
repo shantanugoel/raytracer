@@ -55,6 +55,12 @@ impl Tuple {
     fn normalize(self: &Self) -> Tuple {
         *self / self.magnitude()
     }
+
+    fn dot(self: &Self, other: Tuple) -> f64 {
+        // Cannot take dot product with a point
+        assert_ne!(true, self.is_point() || other.is_point());
+        self.x * other.x + self.y * other.y + self.z * other.z + self.w * other.w
+    }
 }
 
 impl std::ops::Add<Tuple> for Tuple {

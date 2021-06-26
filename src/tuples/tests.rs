@@ -151,3 +151,10 @@ fn test_normalize() {
 
     assert_eq!(1.0, test[1].normalize().magnitude());
 }
+
+#[test]
+fn test_dot() {
+    let a = vector(1.0, 2.0, 3.0);
+    let b = vector(2.0, 3.0, 4.0);
+    assert_eq!(20.0, a.dot(b));
+}
