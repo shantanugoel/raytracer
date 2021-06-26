@@ -3,12 +3,12 @@ use crate::utils::is_eq_float;
 #[allow(unused)]
 
 /// General Tuple to hold a point or a vector
-#[derive(Debug, PartialEq)]
+#[derive(Debug, PartialEq, Clone, Copy)]
 struct Tuple {
-    x: f32,
-    y: f32,
-    z: f32,
-    w: f32,
+    x: f64,
+    y: f64,
+    z: f64,
+    w: f64,
 }
 
 #[derive(Debug, PartialEq)]
@@ -18,16 +18,20 @@ enum TupleType {
 }
 
 /// Create a point
-fn point(x: f32, y: f32, z: f32) -> Tuple {
+fn point(x: f64, y: f64, z: f64) -> Tuple {
     Tuple { x, y, z, w: 1.0 }
 }
 
 /// Create a vector
-fn vector(x: f32, y: f32, z: f32) -> Tuple {
+fn vector(x: f64, y: f64, z: f64) -> Tuple {
     Tuple { x, y, z, w: 0.0 }
 }
 
 impl Tuple {
+    fn new(x: f64, y: f64, z: f64, w: f64) -> Tuple {
+        Tuple { x, y, z, w }
+    }
+
     /// Get the type of Tuple
     fn get_tuple_type(self: &Self) -> TupleType {
         match is_eq_float(&self.w, &1.0) {
@@ -60,6 +64,20 @@ impl std::ops::Add<Tuple> for Tuple {
             z: self.z + rhs.z,
             w: self.w + rhs.w,
         }
+    }
+}
+
+impl std::ops::Mul<f64> for Tuple {
+    type Output = Tuple;
+    fn mul(self, rhs: f64) -> Self::Output {
+        Tuple::new(self.x * rhs, self.y * rhs, self.z * rhs, self.w)
+    }
+}
+
+impl std::ops::Div<f64> for Tuple {
+    type Output = Tuple;
+    fn div(self, rhs: f64) -> Self::Output {
+        Tuple::new(self.x / rhs, self.y / rhs, self.z / rhs, self.w)
     }
 }
 

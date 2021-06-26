@@ -100,3 +100,19 @@ fn test_fail_point_negate() {
     let a = point(1.0, -2.0, 3.0);
     let _ = -a;
 }
+
+#[test]
+fn test_multiply() {
+    let a = Tuple::new(1.0, -2.0, 3.0, 1.0);
+    let expected_1 = Tuple::new(3.5, -7.0, 10.5, 1.0);
+    let expected_2 = Tuple::new(0.5, -1.0, 1.5, 1.0);
+    assert_eq!(expected_1, a * 3.5);
+    assert_eq!(expected_2, a * 0.5);
+}
+
+#[test]
+fn test_divide() {
+    let a = Tuple::new(1.0, -2.0, 3.0, 1.0);
+    let expected_2 = Tuple::new(0.5, -1.0, 1.5, 1.0);
+    assert_eq!(expected_2, a / 2.0);
+}
