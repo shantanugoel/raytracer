@@ -58,12 +58,12 @@ impl std::ops::Add<Tuple> for Tuple {
             self.is_point() && rhs.is_point(),
             "Cannot add two points"
         );
-        Tuple {
-            x: self.x + rhs.x,
-            y: self.y + rhs.y,
-            z: self.z + rhs.z,
-            w: self.w + rhs.w,
-        }
+        Tuple::new(
+            self.x + rhs.x,
+            self.y + rhs.y,
+            self.z + rhs.z,
+            self.w + rhs.w,
+        )
     }
 }
 
@@ -71,6 +71,13 @@ impl std::ops::Mul<f64> for Tuple {
     type Output = Tuple;
     fn mul(self, rhs: f64) -> Self::Output {
         Tuple::new(self.x * rhs, self.y * rhs, self.z * rhs, self.w)
+    }
+}
+
+impl std::ops::Mul<Tuple> for f64 {
+    type Output = Tuple;
+    fn mul(self, rhs: Tuple) -> Self::Output {
+        rhs * self
     }
 }
 
@@ -89,12 +96,12 @@ impl std::ops::Sub<Tuple> for Tuple {
             self.is_vector() && rhs.is_point(),
             "Cannot subtract a point from a vector"
         );
-        Tuple {
-            x: self.x - rhs.x,
-            y: self.y - rhs.y,
-            z: self.z - rhs.z,
-            w: self.w - rhs.w,
-        }
+        Tuple::new(
+            self.x - rhs.x,
+            self.y - rhs.y,
+            self.z - rhs.z,
+            self.w - rhs.w,
+        )
     }
 }
 
@@ -102,12 +109,7 @@ impl std::ops::Neg for Tuple {
     type Output = Tuple;
     fn neg(self) -> Self::Output {
         assert_ne!(true, self.is_point(), "Cannot negate a point");
-        Tuple {
-            x: -self.x,
-            y: -self.y,
-            z: -self.z,
-            w: -self.w,
-        }
+        Tuple::new(-self.x, -self.y, -self.z, -self.w)
     }
 }
 
