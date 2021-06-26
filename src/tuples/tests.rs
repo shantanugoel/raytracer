@@ -158,3 +158,13 @@ fn test_dot() {
     let b = vector(2.0, 3.0, 4.0);
     assert_eq!(20.0, a.dot(b));
 }
+
+#[test]
+fn test_cross() {
+    let a = vector(1.0, 2.0, 3.0);
+    let b = vector(2.0, 3.0, 4.0);
+    let expected_1 = vector(-1.0, 2.0, -1.0);
+    let expected_2 = vector(1.0, -2.0, 1.0);
+    assert_eq!(expected_1, a.cross(b));
+    assert_eq!(expected_2, b.cross(a));
+}

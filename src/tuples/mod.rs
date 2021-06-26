@@ -61,6 +61,15 @@ impl Tuple {
         assert_ne!(true, self.is_point() || other.is_point());
         self.x * other.x + self.y * other.y + self.z * other.z + self.w * other.w
     }
+
+    fn cross(self: &Self, other: Tuple) -> Tuple {
+        assert_ne!(true, self.is_point() || other.is_point());
+        vector(
+            self.y * other.z - self.z * other.y,
+            self.z * other.x - self.x * other.z,
+            self.x * other.y - self.y * other.x,
+        )
+    }
 }
 
 impl std::ops::Add<Tuple> for Tuple {
