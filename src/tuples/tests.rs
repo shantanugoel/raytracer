@@ -118,7 +118,6 @@ fn test_divide() {
 }
 
 #[test]
-
 fn test_magnitude() {
     let test_vector = vec![
         vector(1.0, 0.0, 0.0),
@@ -133,4 +132,22 @@ fn test_magnitude() {
     let v2 = vector(-1.0, -2.0, -3.0);
     assert!(is_eq_float(&14.0_f64.sqrt(), &v1.magnitude()));
     assert!(is_eq_float(&v1.magnitude(), &v2.magnitude()));
+}
+
+#[test]
+fn test_normalize() {
+    let test = vec![vector(4.0, 0.0, 0.0), vector(1.0, 2.0, 3.0)];
+    let expected = vec![
+        vector(1.0, 0.0, 0.0),
+        vector(
+            1.0 / 14.0_f64.sqrt(),
+            2.0 / 14.0_f64.sqrt(),
+            3.0 / 14.0_f64.sqrt(),
+        ),
+    ];
+    for i in 0..test.len() {
+        assert_eq!(expected[i], test[i].normalize());
+    }
+
+    assert_eq!(1.0, test[1].normalize().magnitude());
 }

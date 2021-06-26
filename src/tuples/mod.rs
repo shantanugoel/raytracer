@@ -51,6 +51,10 @@ impl Tuple {
     fn magnitude(self: &Self) -> f64 {
         (self.x * self.x + self.y * self.y + self.z * self.z).sqrt()
     }
+
+    fn normalize(self: &Self) -> Tuple {
+        *self / self.magnitude()
+    }
 }
 
 impl std::ops::Add<Tuple> for Tuple {
