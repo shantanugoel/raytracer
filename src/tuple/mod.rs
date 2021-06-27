@@ -1,7 +1,5 @@
 use std::ops::{Add, Div, Mul, Neg, Sub};
 
-#[allow(unused)]
-
 /// General Tuple to hold a point or a vector
 #[derive(Debug, PartialEq, Clone, Copy)]
 pub struct Tuple {
@@ -149,19 +147,19 @@ impl Vector {
         })
     }
 
-    fn magnitude(self: &Self) -> f64 {
+    pub fn magnitude(self: &Self) -> f64 {
         self.0.magnitude()
     }
 
-    fn normalize(self: &Self) -> Vector {
+    pub fn normalize(self: &Self) -> Vector {
         Vector::from(self.0.normalize())
     }
 
-    fn dot(self: &Self, other: Vector) -> f64 {
+    pub fn dot(self: &Self, other: Vector) -> f64 {
         self.0.dot(other.0)
     }
 
-    fn cross(self: &Self, other: Vector) -> Vector {
+    pub fn cross(self: &Self, other: Vector) -> Vector {
         Vector::from(self.0.cross(other.0))
     }
 }
