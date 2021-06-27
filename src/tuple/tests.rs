@@ -1,4 +1,5 @@
 use super::*;
+use crate::utils::is_eq_float;
 
 #[test]
 fn test_add() {

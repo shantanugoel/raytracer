@@ -1,7 +1,5 @@
 use std::ops::{Add, Div, Mul, Neg, Sub};
 
-use crate::utils::is_eq_float;
-
 #[allow(unused)]
 
 /// General Tuple to hold a point or a vector
