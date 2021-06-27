@@ -31,13 +31,10 @@ impl Tuple {
     }
 
     fn dot(self: &Self, other: Tuple) -> f64 {
-        // Cannot take dot product with a point
-        // assert_ne!(true, self.is_point() || other.is_point());
         self.x * other.x + self.y * other.y + self.z * other.z + self.w * other.w
     }
 
     fn cross(self: &Self, other: Tuple) -> Tuple {
-        // assert_ne!(true, self.is_point() || other.is_point());
         Tuple::new(
             self.y * other.z - self.z * other.y,
             self.z * other.x - self.x * other.z,
@@ -154,8 +151,20 @@ impl Vector {
         })
     }
 
-    fn tuple(self: &Self) -> Tuple {
-        self.0
+    fn magnitude(self: &Self) -> f64 {
+        self.0.magnitude()
+    }
+
+    fn normalize(self: &Self) -> Vector {
+        Vector::from(self.0.normalize())
+    }
+
+    fn dot(self: &Self, other: Vector) -> f64 {
+        self.0.dot(other.0)
+    }
+
+    fn cross(self: &Self, other: Vector) -> Vector {
+        Vector::from(self.0.cross(other.0))
     }
 }
 
