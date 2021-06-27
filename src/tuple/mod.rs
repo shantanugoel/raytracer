@@ -1,4 +1,4 @@
-use std::ops::{Add, Sub};
+use std::ops::{Add, Div, Mul, Neg, Sub};
 
 use crate::utils::is_eq_float;
 
@@ -74,28 +74,28 @@ impl Sub<Tuple> for Tuple {
     }
 }
 
-impl std::ops::Mul<f64> for Tuple {
+impl Mul<f64> for Tuple {
     type Output = Tuple;
     fn mul(self, rhs: f64) -> Self::Output {
         Tuple::new(self.x * rhs, self.y * rhs, self.z * rhs, self.w)
     }
 }
 
-impl std::ops::Mul<Tuple> for f64 {
+impl Mul<Tuple> for f64 {
     type Output = Tuple;
     fn mul(self, rhs: Tuple) -> Self::Output {
         rhs * self
     }
 }
 
-impl std::ops::Div<f64> for Tuple {
+impl Div<f64> for Tuple {
     type Output = Tuple;
     fn div(self, rhs: f64) -> Self::Output {
         Tuple::new(self.x / rhs, self.y / rhs, self.z / rhs, self.w)
     }
 }
 
-impl std::ops::Neg for Tuple {
+impl Neg for Tuple {
     type Output = Tuple;
     fn neg(self) -> Self::Output {
         Tuple::new(-self.x, -self.y, -self.z, -self.w)
@@ -228,6 +228,34 @@ impl Sub<Vector> for Vector {
 
     fn sub(self, rhs: Vector) -> Self::Output {
         Vector::from(self.tuple() - rhs.tuple())
+    }
+}
+
+impl Mul<f64> for Vector {
+    type Output = Vector;
+    fn mul(self, rhs: f64) -> Self::Output {
+        Vector::from(self.0 * rhs)
+    }
+}
+
+impl Mul<Vector> for f64 {
+    type Output = Vector;
+    fn mul(self, rhs: Vector) -> Self::Output {
+        Vector::from(self * rhs.0)
+    }
+}
+
+impl Div<f64> for Vector {
+    type Output = Vector;
+    fn div(self, rhs: f64) -> Self::Output {
+        Vector::from(self.0 / rhs)
+    }
+}
+
+impl Neg for Vector {
+    type Output = Vector;
+    fn neg(self) -> Self::Output {
+        Vector::from(-self.0)
     }
 }
 
