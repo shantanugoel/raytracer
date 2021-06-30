@@ -3,26 +3,22 @@ use std::ops::{Add, Mul, Sub};
 
 #[derive(Debug, Clone, Copy)]
 struct Color {
-    red: f32,
-    green: f32,
-    blue: f32,
+    r: f32,
+    g: f32,
+    b: f32,
 }
 
 impl Color {
     pub fn new(r: f32, g: f32, b: f32) -> Color {
-        Color {
-            red: r,
-            green: g,
-            blue: b,
-        }
+        Color { r, g, b }
     }
 }
 
 impl PartialEq for Color {
     fn eq(&self, other: &Self) -> bool {
-        is_eq_float(&self.red, &other.red)
-            && is_eq_float(&self.green, &other.green)
-            && is_eq_float(&self.blue, &other.blue)
+        is_eq_float(&self.r, &other.r)
+            && is_eq_float(&self.g, &other.g)
+            && is_eq_float(&self.b, &other.b)
     }
 }
 
@@ -31,9 +27,9 @@ impl Add for Color {
 
     fn add(self, rhs: Self) -> Self::Output {
         Color {
-            red: self.red + rhs.red,
-            green: self.green + rhs.green,
-            blue: self.blue + rhs.blue,
+            r: self.r + rhs.r,
+            g: self.g + rhs.g,
+            b: self.b + rhs.b,
         }
     }
 }
@@ -43,9 +39,9 @@ impl Sub for Color {
 
     fn sub(self, rhs: Self) -> Self::Output {
         Color {
-            red: self.red - rhs.red,
-            green: self.green - rhs.green,
-            blue: self.blue - rhs.blue,
+            r: self.r - rhs.r,
+            g: self.g - rhs.g,
+            b: self.b - rhs.b,
         }
     }
 }
@@ -55,9 +51,9 @@ impl Mul for Color {
 
     fn mul(self, rhs: Self) -> Self::Output {
         Color {
-            red: self.red * rhs.red,
-            green: self.green * rhs.green,
-            blue: self.blue * rhs.blue,
+            r: self.r * rhs.r,
+            g: self.g * rhs.g,
+            b: self.b * rhs.b,
         }
     }
 }
