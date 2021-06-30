@@ -3,10 +3,10 @@ use std::ops::{Add, Div, Mul, Neg, Sub};
 /// General Tuple to hold a point or a vector
 #[derive(Debug, PartialEq, Clone, Copy)]
 pub struct Tuple {
-    x: f64,
-    y: f64,
-    z: f64,
-    w: f64,
+    pub x: f64,
+    pub y: f64,
+    pub z: f64,
+    pub w: f64,
 }
 
 pub trait IsTuple {
@@ -106,10 +106,10 @@ trait IsPoint {}
 trait IsVector {}
 
 #[derive(Debug, PartialEq, Clone, Copy)]
-pub struct Point(Tuple);
+pub struct Point(pub Tuple);
 
 #[derive(Debug, PartialEq, Clone, Copy)]
-pub struct Vector(Tuple);
+pub struct Vector(pub Tuple);
 
 impl IsPoint for Point {}
 impl IsVector for Vector {}
@@ -127,7 +127,7 @@ impl IsTuple for Vector {
 }
 
 impl Point {
-    fn new(x: f64, y: f64, z: f64) -> Point {
+    pub fn new(x: f64, y: f64, z: f64) -> Point {
         Point(Tuple {
             x,
             y,
@@ -138,7 +138,7 @@ impl Point {
 }
 
 impl Vector {
-    fn new(x: f64, y: f64, z: f64) -> Vector {
+    pub fn new(x: f64, y: f64, z: f64) -> Vector {
         Vector(Tuple {
             x,
             y,

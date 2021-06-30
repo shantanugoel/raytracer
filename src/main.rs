@@ -1,8 +1,8 @@
-// mod point;
+mod projectiles;
 mod tuple;
 mod utils;
-// mod vector;
 
 fn main() {
+    projectiles::tick_run();
     println!("Hello, world!");
 }
