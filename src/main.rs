@@ -1,3 +1,4 @@
+mod color;
 mod projectiles;
 mod tuple;
 mod utils;
