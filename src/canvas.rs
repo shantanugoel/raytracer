@@ -19,6 +19,16 @@ impl Canvas {
     pub fn pixel_at(self: &Self, x: usize, y: usize) -> Color {
         self.data[y][x]
     }
+
+    pub fn to_ppm(self: &Self) -> String {
+        let mut ppm = format!(
+            "P3\n{} {}\n255\n",
+            self.data[0].len().to_string(),
+            self.data.len().to_string(),
+        );
+        // let data = self.data.iter().flatten().map(|x| format!("{}{}{}", x.))
+        ppm
+    }
 }
 
 #[cfg(test)]
@@ -43,5 +53,12 @@ mod tests {
         let red = Color::new(1.0, 0.0, 0.0);
         c.write_pixel(2, 3, red);
         assert_eq!(red, c.pixel_at(2, 3));
+    }
+
+    #[test]
+    fn test_ppm_header() {
+        let c = Canvas::new(5, 3);
+        let expected = "P3\n5 3\n255\n";
+        assert_eq!(expected, c.to_ppm().as_str());
     }
 }
