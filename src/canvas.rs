@@ -59,6 +59,6 @@ mod tests {
     fn test_ppm_header() {
         let c = Canvas::new(5, 3);
         let expected = "P3\n5 3\n255\n";
-        assert_eq!(expected, c.to_ppm().as_str());
+        assert_eq!(*expected, c.to_ppm()[..expected.len()]);
     }
 }
