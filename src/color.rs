@@ -2,7 +2,7 @@ use crate::utils::is_eq_float;
 use std::ops::{Add, Mul, Sub};
 
 #[derive(Debug, Clone, Copy)]
-struct Color {
+pub struct Color {
     r: f32,
     g: f32,
     b: f32,
