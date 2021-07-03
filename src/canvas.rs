@@ -26,7 +26,21 @@ impl Canvas {
             self.data[0].len().to_string(),
             self.data.len().to_string(),
         );
-        // let data = self.data.iter().flatten().map(|x| format!("{}{}{}", x.))
+        for row in &self.data {
+            for (column_index, column) in row.iter().enumerate() {
+                ppm.push_str(column.to_string().as_str());
+
+                // Don't add a space if it's the last color in the row
+                if column_index < row.len() - 1 {
+                    ppm.push(' ');
+                }
+            }
+            ppm.push('\n');
+        }
+        self.data
+            .iter()
+            .flatten()
+            .for_each(|c| ppm.push_str(c.to_string().trim_end()));
         ppm
     }
 }
@@ -59,6 +73,19 @@ mod tests {
     fn test_ppm_header() {
         let c = Canvas::new(5, 3);
         let expected = "P3\n5 3\n255\n";
+        assert_eq!(*expected, c.to_ppm()[..expected.len()]);
+    }
+
+    #[test]
+    fn test_ppm() {
+        let mut c = Canvas::new(5, 3);
+        let c1 = Color::new(1.5, 0.0, 0.0);
+        let c2 = Color::new(0.0, 0.5, 0.0);
+        let c3 = Color::new(-0.5, 0.0, 1.0);
+        c.write_pixel(0, 0, c1);
+        c.write_pixel(2, 1, c2);
+        c.write_pixel(4, 2, c3);
+        let expected = "P3\n5 3\n255\n255 0 0 0 0 0 0 0 0 0 0 0 0 0 0\n0 0 0 0 0 0 0 128 0 0 0 0 0 0 0\n0 0 0 0 0 0 0 0 0 0 0 0 0 0 255\n";
         assert_eq!(*expected, c.to_ppm()[..expected.len()]);
     }
 }

@@ -1,16 +1,27 @@
+use num::ToPrimitive;
+
 use crate::utils::is_eq_float;
 use std::ops::{Add, Mul, Sub};
 
 #[derive(Debug, Clone, Copy)]
 pub struct Color {
-    r: f32,
-    g: f32,
-    b: f32,
+    pub r: f32,
+    pub g: f32,
+    pub b: f32,
 }
 
 impl Color {
     pub fn new(r: f32, g: f32, b: f32) -> Color {
         Color { r, g, b }
+    }
+
+    pub fn to_string(self: &Self) -> String {
+        format!(
+            "{} {} {}",
+            scale_to_rgb(self.r),
+            scale_to_rgb(self.g),
+            scale_to_rgb(self.b)
+        )
     }
 }
 
@@ -56,6 +67,13 @@ impl Mul for Color {
             b: self.b * rhs.b,
         }
     }
+}
+
+// Scale incoming color float to a 0-255 u8 range
+fn scale_to_rgb(c: f32) -> u8 {
+    let mut v = c * 256.0;
+    v = v.clamp(0.0, 255.0);
+    v.to_u8().expect("Failure converting color value to u8")
 }
 
 #[cfg(test)]
