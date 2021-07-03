@@ -37,10 +37,6 @@ impl Canvas {
             }
             ppm.push('\n');
         }
-        self.data
-            .iter()
-            .flatten()
-            .for_each(|c| ppm.push_str(c.to_string().trim_end()));
         ppm
     }
 }
