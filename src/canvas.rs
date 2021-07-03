@@ -1,8 +1,6 @@
 use crate::color::Color;
 
 pub struct Canvas {
-    // width: usize, Probably not needed as can be derived from data
-    // height: usize,Probably not needed as can be derived from data
     data: Vec<Vec<Color>>,
 }
 
