@@ -10,10 +10,21 @@ impl Canvas {
         Canvas { data }
     }
 
+    pub fn height(self: &Self) -> usize {
+        self.data.len()
+    }
+
+    #[allow(dead_code)]
+    pub fn width(self: &Self) -> usize {
+        // TODO Error check
+        self.data.first().unwrap().len()
+    }
+
     pub fn write_pixel(self: &mut Self, x: usize, y: usize, color: Color) {
         self.data[y][x] = color;
     }
 
+    #[allow(dead_code)]
     pub fn pixel_at(self: &Self, x: usize, y: usize) -> Color {
         self.data[y][x]
     }
