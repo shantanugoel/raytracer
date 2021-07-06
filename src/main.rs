@@ -1,5 +1,6 @@
 mod canvas;
 mod color;
+mod matrix;
 mod projectiles;
 mod tuple;
 mod utils;
