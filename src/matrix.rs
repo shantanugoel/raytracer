@@ -42,11 +42,11 @@ mod tests {
     fn test_matrix_creation_default() {
         let num_rows = 2;
         let num_cols = 2;
-        let mut m2x2 = Matrix::<f64>::new(num_rows, num_cols);
+        let m = Matrix::<f64>::new(num_rows, num_cols);
         let expected_vec = vec![0.0, 0.0, 0.0, 0.0];
-        assert_eq!(num_rows * num_cols, m2x2.data.capacity());
-        assert_eq!(num_rows * num_cols, m2x2.data.len());
-        assert_eq!(expected_vec, m2x2.data);
+        assert_eq!(num_rows * num_cols, m.data.capacity());
+        assert_eq!(num_rows * num_cols, m.data.len());
+        assert_eq!(expected_vec, m.data);
     }
 
     #[test]
