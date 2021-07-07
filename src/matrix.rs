@@ -4,6 +4,7 @@ use std::{
 };
 
 pub struct Matrix<T> {
+    #[allow(dead_code)]
     rows: usize,
     cols: usize,
     data: Vec<T>,
@@ -34,6 +35,21 @@ impl<T> IndexMut<usize> for Matrix<T> {
     }
 }
 
+impl<T, const R: usize, const C: usize> From<[[T; C]; R]> for Matrix<T>
+where
+    T: Default + Copy,
+{
+    fn from(x: [[T; C]; R]) -> Self {
+        let mut m = Matrix::<T>::new(R, C);
+        for r in 0..R {
+            for c in 0..C {
+                m[r][c] = x[r][c];
+            }
+        }
+        m
+    }
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;
@@ -61,5 +77,23 @@ mod tests {
             }
         }
         assert_eq!(expected_vector, m.data);
+    }
+
+    #[test]
+    fn test_matrix_from_slice() {
+        let slice1 = [[1.2, 2.3], [2.1, 3.2]];
+        let slice2 = [[1; 3]; 4];
+        let m1 = Matrix::from(slice1);
+        let m2 = Matrix::from(slice2);
+        for (row, row_val) in slice1.iter().enumerate() {
+            for (col, col_val) in row_val.iter().enumerate() {
+                assert_eq!(m1[row][col], *col_val);
+            }
+        }
+        for (row, row_val) in slice2.iter().enumerate() {
+            for (col, col_val) in row_val.iter().enumerate() {
+                assert_eq!(m2[row][col], *col_val);
+            }
+        }
     }
 }
