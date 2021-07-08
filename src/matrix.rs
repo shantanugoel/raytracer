@@ -28,11 +28,11 @@ where
         Matrix { rows, cols, data }
     }
 
-    pub fn num_rows(self: &Self) -> usize {
+    pub fn num_rows(&self) -> usize {
         self.rows
     }
 
-    pub fn num_cols(self: &Self) -> usize {
+    pub fn num_cols(&self) -> usize {
         self.cols
     }
 

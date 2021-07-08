@@ -10,24 +10,24 @@ impl Canvas {
         Canvas { data }
     }
 
-    pub fn height(self: &Self) -> usize {
+    pub fn height(&self) -> usize {
         self.data.num_rows()
     }
 
-    pub fn width(self: &Self) -> usize {
+    pub fn width(&self) -> usize {
         self.data.num_cols()
     }
 
-    pub fn write_pixel(self: &mut Self, x: usize, y: usize, color: Color) {
+    pub fn write_pixel(&mut self, x: usize, y: usize, color: Color) {
         self.data[y][x] = color;
     }
 
     #[allow(dead_code)]
-    pub fn pixel_at(self: &Self, x: usize, y: usize) -> Color {
+    pub fn pixel_at(&self, x: usize, y: usize) -> Color {
         self.data[y][x]
     }
 
-    pub fn to_ppm(self: &Self) -> String {
+    pub fn to_ppm(&self) -> String {
         let mut ppm = format!(
             "P3\n{} {}\n255\n",
             self.width().to_string(),
@@ -35,7 +35,7 @@ impl Canvas {
         );
         for row in self.data.iter() {
             for (column_index, column) in row.into_iter().enumerate() {
-                ppm.push_str(column.to_string().as_str());
+                ppm.push_str(column.to_scaled_rgb_string().as_str());
                 if column_index < self.data.num_cols() - 1 {
                     ppm.push(' ');
                 }

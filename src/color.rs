@@ -15,7 +15,7 @@ impl Color {
         Color { r, g, b }
     }
 
-    pub fn to_string(self: &Self) -> String {
+    pub fn to_scaled_rgb_string(self) -> String {
         format!(
             "{} {} {}",
             scale_to_rgb(self.r),

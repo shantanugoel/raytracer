@@ -1,5 +1,7 @@
 use std::ops::{Add, Div, Mul, Neg, Sub};
 
+use crate::utils::is_eq_float;
+
 /// General Tuple to hold a point or a vector
 #[derive(Debug, PartialEq, Clone, Copy)]
 pub struct Tuple {
@@ -10,7 +12,7 @@ pub struct Tuple {
 }
 
 pub trait IsTuple {
-    fn tuple(self: &Self) -> Tuple;
+    fn tuple(&self) -> Tuple;
 }
 
 impl Tuple {
@@ -18,19 +20,19 @@ impl Tuple {
         Tuple { x, y, z, w }
     }
 
-    fn magnitude(self: &Self) -> f64 {
+    fn magnitude(&self) -> f64 {
         (self.x * self.x + self.y * self.y + self.z * self.z).sqrt()
     }
 
-    fn normalize(self: &Self) -> Tuple {
+    fn normalize(&self) -> Tuple {
         *self / self.magnitude()
     }
 
-    fn dot(self: &Self, other: Tuple) -> f64 {
+    fn dot(&self, other: Tuple) -> f64 {
         self.x * other.x + self.y * other.y + self.z * other.z + self.w * other.w
     }
 
-    fn cross(self: &Self, other: Tuple) -> Tuple {
+    fn cross(&self, other: Tuple) -> Tuple {
         Tuple::new(
             self.y * other.z - self.z * other.y,
             self.z * other.x - self.x * other.z,
@@ -115,13 +117,13 @@ impl IsPoint for Point {}
 impl IsVector for Vector {}
 
 impl IsTuple for Point {
-    fn tuple(self: &Self) -> Tuple {
+    fn tuple(&self) -> Tuple {
         self.0
     }
 }
 
 impl IsTuple for Vector {
-    fn tuple(self: &Self) -> Tuple {
+    fn tuple(&self) -> Tuple {
         self.0
     }
 }
@@ -147,27 +149,27 @@ impl Vector {
         })
     }
 
-    pub fn magnitude(self: &Self) -> f64 {
+    pub fn magnitude(&self) -> f64 {
         self.0.magnitude()
     }
 
-    pub fn normalize(self: &Self) -> Vector {
+    pub fn normalize(&self) -> Vector {
         Vector::from(self.0.normalize())
     }
 
-    pub fn dot(self: &Self, other: Vector) -> f64 {
+    pub fn dot(&self, other: Vector) -> f64 {
         self.0.dot(other.0)
     }
 
-    pub fn cross(self: &Self, other: Vector) -> Vector {
+    pub fn cross(&self, other: Vector) -> Vector {
         Vector::from(self.0.cross(other.0))
     }
 }
 
 impl From<Tuple> for Vector {
     fn from(t: Tuple) -> Self {
-        assert_eq!(
-            VECTOR_VALUE, t.w,
+        assert!(
+            is_eq_float(&VECTOR_VALUE, &t.w),
             "Attempted implicit conversion from point to vector"
         );
         Vector::new(t.x, t.y, t.z)
@@ -176,8 +178,8 @@ impl From<Tuple> for Vector {
 
 impl From<Tuple> for Point {
     fn from(t: Tuple) -> Self {
-        assert_eq!(
-            POINT_VALUE, t.w,
+        assert!(
+            is_eq_float(&POINT_VALUE, &t.w),
             "Attempted implicit conversion from vector to point"
         );
         Point::new(t.x, t.y, t.z)
