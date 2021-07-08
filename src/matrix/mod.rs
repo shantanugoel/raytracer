@@ -20,7 +20,7 @@ pub struct Matrix<T> {
 
 impl<T> Matrix<T>
 where
-    T: Default,
+    T: Default + Copy,
 {
     pub fn new(rows: usize, cols: usize) -> Matrix<T> {
         let mut data: Vec<T> = Vec::<T>::with_capacity(rows * cols);
@@ -57,10 +57,7 @@ where
         (0..self.rows).map(move |row_index| self.row_iter(row_index))
     }
 
-    pub fn transpose(&self) -> Self
-    where
-        T: Copy,
-    {
+    pub fn transpose(&self) -> Self {
         let mut m = Matrix::new(self.rows, self.cols);
         for row in 0..self.rows {
             for col in 0..self.cols {
@@ -73,7 +70,7 @@ where
 
     pub fn determinant(&self) -> Result<T, MatrixError>
     where
-        T: Copy + Mul<Output = T> + Sub<Output = T>,
+        T: Mul<Output = T> + Sub<Output = T>,
     {
         // Determinant is only for 2x2 matrices
         if self.rows != 2 || self.cols != 2 {
@@ -82,6 +79,35 @@ where
         }
 
         Ok(self[0][0] * self[1][1] - self[0][1] * self[1][0])
+    }
+
+    pub fn submatrix(&self, row: usize, col: usize) -> Result<Self, MatrixError> {
+        if row >= self.rows || col >= self.cols {
+            let error = format!(
+                "Row ({}) or column ({}) larger than matrix size {}x{}",
+                row, col, self.rows, self.cols
+            );
+            return Err(MatrixError::InvalidArgument(error));
+        }
+
+        let mut m = Matrix::new(self.rows - 1, self.cols - 1);
+
+        let mut submatrix_row = 0;
+        for r in 0..self.rows {
+            if r == row {
+                continue;
+            }
+            let mut submatrix_col = 0;
+            for c in 0..self.cols {
+                if c == col {
+                    continue;
+                }
+                m[submatrix_row][submatrix_col] = self[r][c];
+                submatrix_col += 1;
+            }
+            submatrix_row += 1;
+        }
+        Ok(m)
     }
 }
 

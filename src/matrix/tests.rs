@@ -108,3 +108,16 @@ fn test_determinant() {
     let m2: Matrix<i32> = Matrix::from([[1, 5, 6], [-3, 2, 1]]);
     assert!(m2.determinant().is_err());
 }
+
+#[test]
+fn test_submatrix() {
+    let m1 = Matrix::<i32>::from([[1, 5, 0], [-3, 2, 7], [0, 6, -3]]);
+    let expected1 = Matrix::<i32>::from([[-3, 2], [0, 6]]);
+    assert_eq!(expected1, m1.submatrix(0, 2).unwrap());
+
+    let m2 = Matrix::<i32>::from([[-6, 1, 1, 6], [-8, 5, 8, 6], [-1, 0, 8, 2], [-7, 1, -1, 1]]);
+    let expected2 = Matrix::<i32>::from([[-6, 1, 6], [-8, 8, 6], [-7, -1, 1]]);
+    assert_eq!(expected2, m2.submatrix(2, 1).unwrap());
+
+    assert!(m1.submatrix(3, 0).is_err());
+}
