@@ -3,6 +3,7 @@ use std::{
     usize,
 };
 
+#[derive(Debug, Clone, PartialEq, Eq)]
 pub struct Matrix<T> {
     rows: usize,
     cols: usize,
@@ -111,5 +112,13 @@ mod tests {
                 assert_eq!(m2[row][col], *col_val);
             }
         }
+    }
+
+    #[test]
+    fn test_compare() {
+        let slice = [[1.2, 2.3], [2.1, 3.2]];
+        let m1 = Matrix::from(slice);
+        let m2 = Matrix::from(slice);
+        assert_eq!(m1, m2);
     }
 }
