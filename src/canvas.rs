@@ -55,7 +55,6 @@ mod tests {
         let c = Canvas::new(10, 20);
         let black = Color::new(0.0, 0.0, 0.0);
         for x in 0_usize..10_usize {
-            println!("{}", x);
             for y in 0_usize..20_usize {
                 assert_eq!(c.pixel_at(x, y), black);
             }
@@ -87,8 +86,6 @@ mod tests {
         c.write_pixel(2, 1, c2);
         c.write_pixel(4, 2, c3);
         let expected = "P3\n5 3\n255\n255 0 0 0 0 0 0 0 0 0 0 0 0 0 0\n0 0 0 0 0 0 0 128 0 0 0 0 0 0 0\n0 0 0 0 0 0 0 0 0 0 0 0 0 0 255\n";
-        println!("{} {}", c.to_ppm().len(), expected.len());
-        println!("{:?}", c.to_ppm());
         assert_eq!(*expected, c.to_ppm()[..expected.len()]);
     }
 }
