@@ -27,7 +27,7 @@ where
         self.cols
     }
 
-    pub fn row_iter(&self, row_index: usize) -> impl Iterator<Item = &T> {
+    fn row_iter(&self, row_index: usize) -> impl Iterator<Item = &T> {
         println!("{} {}", row_index, (row_index + 1) * self.cols);
         self.data[row_index * self.cols..(row_index + 1) * self.cols].iter()
     }
