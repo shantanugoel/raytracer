@@ -14,9 +14,7 @@ impl Canvas {
         self.data.num_rows()
     }
 
-    #[allow(dead_code)]
     pub fn width(self: &Self) -> usize {
-        // TODO Error check
         self.data.num_cols()
     }
 
