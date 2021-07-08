@@ -28,6 +28,19 @@ where
         Matrix { rows, cols, data }
     }
 
+    /// Returns a matrix with diagonal elementts initialized by `value`
+    /// Supply 1.0 as the value for a true identity matrix
+    pub fn identity(dimensions: usize, value: T) -> Matrix<T>
+    where
+        T: Clone,
+    {
+        let mut m: Matrix<T> = Matrix::new(dimensions, dimensions);
+        for index in 0..dimensions {
+            m[index][index] = value.clone();
+        }
+        m
+    }
+
     pub fn num_rows(&self) -> usize {
         self.rows
     }
@@ -217,5 +230,12 @@ mod tests {
         let m1: Matrix<i32> = Matrix::from([[1, 2, 3, 4], [5, 6, 7, 8]]);
         let m2: Matrix<i32> = Matrix::from([[-2, 1, 2], [3, 2, 1], [4, 3, 6]]);
         assert!((m1 * m2).is_err());
+    }
+
+    #[test]
+    fn test_identity() {
+        let m = Matrix::identity(2, 1.0);
+        let expected = Matrix::<f64>::from([[1.0, 0.0], [0.0, 1.0]]);
+        assert_eq!(expected, m);
     }
 }
