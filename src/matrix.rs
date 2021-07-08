@@ -30,7 +30,7 @@ where
 
     /// Returns a matrix with diagonal elementts initialized by `value`
     /// Supply 1.0 as the value for a true identity matrix
-    pub fn identity(dimensions: usize, value: T) -> Matrix<T>
+    pub fn identity(dimensions: usize, value: T) -> Self
     where
         T: Clone,
     {
@@ -56,6 +56,20 @@ where
 
     pub fn iter(&self) -> impl Iterator<Item = impl Iterator<Item = &T>> {
         (0..self.rows).map(move |row_index| self.row_iter(row_index))
+    }
+
+    pub fn transpose(&self) -> Self
+    where
+        T: Copy,
+    {
+        let mut m = Matrix::new(self.rows, self.cols);
+        for row in 0..self.rows {
+            for col in 0..self.cols {
+                m[col][row] = self[row][col];
+                m[row][col] = self[col][row];
+            }
+        }
+        m
     }
 }
 
@@ -239,5 +253,15 @@ mod tests {
         assert_eq!(expected, m1);
         let m2 = Matrix::from([[1.0, 2.0], [5.0, 6.0]]);
         assert_eq!(m2, (m2.clone() * m1).unwrap());
+    }
+
+    #[test]
+    fn test_transpose() {
+        let m: Matrix<i32> = Matrix::from([[0, 9, 3, 0], [9, 8, 0, 8], [1, 8, 5, 3], [0, 0, 5, 8]]);
+        let expected: Matrix<i32> =
+            Matrix::from([[0, 9, 1, 0], [9, 8, 8, 0], [3, 0, 5, 5], [0, 8, 3, 8]]);
+        assert_eq!(expected, m.transpose());
+        let i = Matrix::identity(4, 1);
+        assert_eq!(i, i.transpose());
     }
 }
