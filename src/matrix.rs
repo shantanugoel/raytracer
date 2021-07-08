@@ -26,6 +26,15 @@ where
     pub fn num_cols(self: &Self) -> usize {
         self.cols
     }
+
+    pub fn row_iter(&self, row_index: usize) -> impl Iterator<Item = &T> {
+        println!("{} {}", row_index, (row_index + 1) * self.cols);
+        self.data[row_index * self.cols..(row_index + 1) * self.cols].iter()
+    }
+
+    pub fn iter(&self) -> impl Iterator<Item = impl Iterator<Item = &T>> {
+        (0..self.rows).map(move |row_index| self.row_iter(row_index))
+    }
 }
 
 impl<T> Index<usize> for Matrix<T> {

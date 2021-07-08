@@ -35,12 +35,10 @@ impl Canvas {
             self.width().to_string(),
             self.height().to_string(),
         );
-        for row in 0..self.data.num_rows() {
-            for column in 0..self.data.num_cols() {
-                ppm.push_str(self.data[row][column].to_string().as_str());
-
-                // Don't add a space if it's the last color in the row
-                if column < self.data.num_cols() - 1 {
+        for row in self.data.iter() {
+            for (column_index, column) in row.into_iter().enumerate() {
+                ppm.push_str(column.to_string().as_str());
+                if column_index < self.data.num_cols() - 1 {
                     ppm.push(' ');
                 }
             }
@@ -91,6 +89,8 @@ mod tests {
         c.write_pixel(2, 1, c2);
         c.write_pixel(4, 2, c3);
         let expected = "P3\n5 3\n255\n255 0 0 0 0 0 0 0 0 0 0 0 0 0 0\n0 0 0 0 0 0 0 128 0 0 0 0 0 0 0\n0 0 0 0 0 0 0 0 0 0 0 0 0 0 255\n";
+        println!("{} {}", c.to_ppm().len(), expected.len());
+        println!("{:?}", c.to_ppm());
         assert_eq!(*expected, c.to_ppm()[..expected.len()]);
     }
 }
