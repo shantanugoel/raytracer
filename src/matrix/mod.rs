@@ -109,6 +109,14 @@ where
         }
         Ok(m)
     }
+
+    pub fn minor(&self, row: usize, col: usize) -> Result<T, MatrixError>
+    where
+        T: Mul<Output = T> + Sub<Output = T>,
+    {
+        //TODO Implement for larger than 3x3
+        self.submatrix(row, col)?.determinant()
+    }
 }
 
 impl<T> Index<usize> for Matrix<T> {
