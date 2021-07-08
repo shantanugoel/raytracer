@@ -116,9 +116,12 @@ mod tests {
 
     #[test]
     fn test_compare() {
-        let slice = [[1.2, 2.3], [2.1, 3.2]];
-        let m1 = Matrix::from(slice);
-        let m2 = Matrix::from(slice);
+        let slice1 = [[1.2, 2.3], [2.1, 3.2]];
+        let slice2 = [[1.0; 3]; 4];
+        let m1 = Matrix::from(slice1);
+        let m2 = Matrix::from(slice1);
+        let m3 = Matrix::from(slice2);
         assert_eq!(m1, m2);
+        assert_ne!(m1, m3);
     }
 }
