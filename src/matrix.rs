@@ -234,8 +234,10 @@ mod tests {
 
     #[test]
     fn test_identity() {
-        let m = Matrix::identity(2, 1.0);
+        let m1 = Matrix::identity(2, 1.0);
         let expected = Matrix::<f64>::from([[1.0, 0.0], [0.0, 1.0]]);
-        assert_eq!(expected, m);
+        assert_eq!(expected, m1);
+        let m2 = Matrix::from([[1.0, 2.0], [5.0, 6.0]]);
+        assert_eq!(m2, (m2.clone() * m1).unwrap());
     }
 }
