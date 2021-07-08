@@ -3,6 +3,14 @@ use std::{
     usize,
 };
 
+use thiserror::Error;
+
+#[derive(Error, Debug)]
+pub enum MatrixError {
+    #[error("Invalid arguments {0}")]
+    InvalidArgument(String),
+}
+
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub struct Matrix<T> {
     rows: usize,
@@ -71,7 +79,7 @@ impl<T> Mul for Matrix<T>
 where
     T: Default + Copy + Mul<Output = T> + AddAssign,
 {
-    type Output = Matrix<T>;
+    type Output = Result<Matrix<T>, MatrixError>;
 
     fn mul(self, rhs: Self) -> Self::Output {
         let num_rows1 = self.rows;
@@ -79,8 +87,11 @@ where
         let num_rows2 = rhs.rows;
         let num_cols2 = rhs.cols;
 
-        // TODO better check and error messaging
-        assert_eq!(num_cols1, num_rows2);
+        if num_cols1 != num_rows2 {
+            return Err(MatrixError::InvalidArgument(
+                format!("Incompatible matrices. Matrix 1 Col size {} and Matrix 2 Row size {} are not equal",
+                 num_cols1, num_rows2)));
+        }
 
         let mut output = Matrix::new(num_rows1, num_cols2);
         for row in 0..num_rows1 {
@@ -90,7 +101,7 @@ where
                 }
             }
         }
-        output
+        Ok(output)
     }
 }
 
@@ -163,6 +174,13 @@ mod tests {
             [16, 26, 46, 42],
         ]);
 
-        assert_eq!(expected, m1 * m2);
+        assert_eq!(expected, (m1 * m2).unwrap());
+    }
+
+    #[test]
+    fn test_multiply_matrix_error() {
+        let m1 = Matrix::from([[1, 2, 3, 4], [5, 6, 7, 8]]);
+        let m2 = Matrix::from([[-2, 1, 2], [3, 2, 1], [4, 3, 6]]);
+        assert!((m1 * m2).is_err());
     }
 }
