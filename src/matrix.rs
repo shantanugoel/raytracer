@@ -1,5 +1,5 @@
 use std::{
-    ops::{Index, IndexMut},
+    ops::{AddAssign, Index, IndexMut, Mul},
     usize,
 };
 
@@ -67,6 +67,33 @@ where
     }
 }
 
+impl<T> Mul for Matrix<T>
+where
+    T: Default + Copy + Mul<Output = T> + AddAssign,
+{
+    type Output = Matrix<T>;
+
+    fn mul(self, rhs: Self) -> Self::Output {
+        let num_rows1 = self.rows;
+        let num_cols1 = self.cols;
+        let num_rows2 = rhs.rows;
+        let num_cols2 = rhs.cols;
+
+        // TODO better check and error messaging
+        assert_eq!(num_cols1, num_rows2);
+
+        let mut output = Matrix::new(num_rows1, num_cols2);
+        for row in 0..num_rows1 {
+            for col in 0..num_cols2 {
+                for index in 0..num_cols1 {
+                    output[row][col] += self[row][index] * rhs[index][col];
+                }
+            }
+        }
+        output
+    }
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;
@@ -123,5 +150,19 @@ mod tests {
         let m3 = Matrix::from(slice2);
         assert_eq!(m1, m2);
         assert_ne!(m1, m3);
+    }
+
+    #[test]
+    fn test_multiply_matrix() {
+        let m1 = Matrix::from([[1, 2, 3, 4], [5, 6, 7, 8], [9, 8, 7, 6], [5, 4, 3, 2]]);
+        let m2 = Matrix::from([[-2, 1, 2, 3], [3, 2, 1, -1], [4, 3, 6, 5], [1, 2, 7, 8]]);
+        let expected = Matrix::from([
+            [20, 22, 50, 48],
+            [44, 54, 114, 108],
+            [40, 58, 110, 102],
+            [16, 26, 46, 42],
+        ]);
+
+        assert_eq!(expected, m1 * m2);
     }
 }
