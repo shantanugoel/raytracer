@@ -25,6 +25,12 @@ impl Color {
     }
 }
 
+impl Default for Color {
+    fn default() -> Self {
+        Color::new(0.0, 0.0, 0.0)
+    }
+}
+
 impl PartialEq for Color {
     fn eq(&self, other: &Self) -> bool {
         is_eq_float(&self.r, &other.r)

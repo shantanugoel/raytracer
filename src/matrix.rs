@@ -4,7 +4,6 @@ use std::{
 };
 
 pub struct Matrix<T> {
-    #[allow(dead_code)]
     rows: usize,
     cols: usize,
     data: Vec<T>,
@@ -18,6 +17,14 @@ where
         let mut data: Vec<T> = Vec::<T>::with_capacity(rows * cols);
         data.resize_with(rows * cols, Default::default);
         Matrix { rows, cols, data }
+    }
+
+    pub fn num_rows(self: &Self) -> usize {
+        self.rows
+    }
+
+    pub fn num_cols(self: &Self) -> usize {
+        self.cols
     }
 }
 

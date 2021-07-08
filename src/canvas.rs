@@ -1,23 +1,23 @@
-use crate::color::Color;
+use crate::{color::Color, matrix::Matrix};
 
 pub struct Canvas {
-    data: Vec<Vec<Color>>,
+    data: Matrix<Color>,
 }
 
 impl Canvas {
     pub fn new(width: usize, height: usize) -> Canvas {
-        let data: Vec<Vec<Color>> = vec![vec![Color::new(0.0, 0.0, 0.0); width]; height];
+        let data = Matrix::<Color>::new(height, width);
         Canvas { data }
     }
 
     pub fn height(self: &Self) -> usize {
-        self.data.len()
+        self.data.num_rows()
     }
 
     #[allow(dead_code)]
     pub fn width(self: &Self) -> usize {
         // TODO Error check
-        self.data.first().unwrap().len()
+        self.data.num_cols()
     }
 
     pub fn write_pixel(self: &mut Self, x: usize, y: usize, color: Color) {
@@ -32,15 +32,15 @@ impl Canvas {
     pub fn to_ppm(self: &Self) -> String {
         let mut ppm = format!(
             "P3\n{} {}\n255\n",
-            self.data[0].len().to_string(),
-            self.data.len().to_string(),
+            self.width().to_string(),
+            self.height().to_string(),
         );
-        for row in &self.data {
-            for (column_index, column) in row.iter().enumerate() {
-                ppm.push_str(column.to_string().as_str());
+        for row in 0..self.data.num_rows() {
+            for column in 0..self.data.num_cols() {
+                ppm.push_str(self.data[row][column].to_string().as_str());
 
                 // Don't add a space if it's the last color in the row
-                if column_index < row.len() - 1 {
+                if column < self.data.num_cols() - 1 {
                     ppm.push(' ');
                 }
             }
