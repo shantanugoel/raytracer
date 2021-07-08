@@ -75,6 +75,20 @@ where
     }
 }
 
+// Treats single dimension slices as multi-row/single-column matrix.
+impl<T, const R: usize> From<[T; R]> for Matrix<T>
+where
+    T: Default + Copy,
+{
+    fn from(x: [T; R]) -> Self {
+        let mut m = Matrix::<T>::new(R, 1);
+        for r in 0..R {
+            m[r][0] = x[r];
+        }
+        m
+    }
+}
+
 impl<T> Mul for Matrix<T>
 where
     T: Default + Copy + Mul<Output = T> + AddAssign,
@@ -102,6 +116,17 @@ where
             }
         }
         Ok(output)
+    }
+}
+
+impl<T, const R: usize> Mul<[T; R]> for Matrix<T>
+where
+    T: Default + Copy + Mul<Output = T> + AddAssign,
+{
+    type Output = Result<Matrix<T>, MatrixError>;
+    fn mul(self, rhs: [T; R]) -> Self::Output {
+        let m2 = Matrix::from(rhs);
+        self * m2
     }
 }
 
@@ -138,8 +163,8 @@ mod tests {
     fn test_matrix_from_slice() {
         let slice1 = [[1.2, 2.3], [2.1, 3.2]];
         let slice2 = [[1; 3]; 4];
-        let m1 = Matrix::from(slice1);
-        let m2 = Matrix::from(slice2);
+        let m1: Matrix<f64> = Matrix::from(slice1);
+        let m2: Matrix<i32> = Matrix::from(slice2);
         for (row, row_val) in slice1.iter().enumerate() {
             for (col, col_val) in row_val.iter().enumerate() {
                 assert_eq!(m1[row][col], *col_val);
@@ -156,17 +181,19 @@ mod tests {
     fn test_compare() {
         let slice1 = [[1.2, 2.3], [2.1, 3.2]];
         let slice2 = [[1.0; 3]; 4];
-        let m1 = Matrix::from(slice1);
-        let m2 = Matrix::from(slice1);
-        let m3 = Matrix::from(slice2);
+        let m1: Matrix<f64> = Matrix::from(slice1);
+        let m2: Matrix<f64> = Matrix::from(slice1);
+        let m3: Matrix<f64> = Matrix::from(slice2);
         assert_eq!(m1, m2);
         assert_ne!(m1, m3);
     }
 
     #[test]
     fn test_multiply_matrix() {
-        let m1 = Matrix::from([[1, 2, 3, 4], [5, 6, 7, 8], [9, 8, 7, 6], [5, 4, 3, 2]]);
-        let m2 = Matrix::from([[-2, 1, 2, 3], [3, 2, 1, -1], [4, 3, 6, 5], [1, 2, 7, 8]]);
+        let m1: Matrix<i32> =
+            Matrix::from([[1, 2, 3, 4], [5, 6, 7, 8], [9, 8, 7, 6], [5, 4, 3, 2]]);
+        let m2: Matrix<i32> =
+            Matrix::from([[-2, 1, 2, 3], [3, 2, 1, -1], [4, 3, 6, 5], [1, 2, 7, 8]]);
         let expected = Matrix::from([
             [20, 22, 50, 48],
             [44, 54, 114, 108],
@@ -175,12 +202,20 @@ mod tests {
         ]);
 
         assert_eq!(expected, (m1 * m2).unwrap());
+
+        let m3: Matrix<i32> =
+            Matrix::from([[1, 2, 3, 4], [2, 4, 4, 2], [8, 6, 4, 1], [0, 0, 0, 1]]);
+        let slice = [1, 2, 3, 1];
+        let m4 = Matrix::from(slice);
+        let expected2: Matrix<i32> = Matrix::from([18, 24, 33, 1]);
+        assert_eq!(expected2, (m3.clone() * slice).unwrap());
+        assert_eq!(expected2, (m3 * m4).unwrap());
     }
 
     #[test]
     fn test_multiply_matrix_error() {
-        let m1 = Matrix::from([[1, 2, 3, 4], [5, 6, 7, 8]]);
-        let m2 = Matrix::from([[-2, 1, 2], [3, 2, 1], [4, 3, 6]]);
+        let m1: Matrix<i32> = Matrix::from([[1, 2, 3, 4], [5, 6, 7, 8]]);
+        let m2: Matrix<i32> = Matrix::from([[-2, 1, 2], [3, 2, 1], [4, 3, 6]]);
         assert!((m1 * m2).is_err());
     }
 }
