@@ -135,4 +135,17 @@ fn test_cofactor() {
     assert_eq!(-12, m.cofactor(0, 0).unwrap());
     assert_eq!(25, m.minor(1, 0).unwrap());
     assert_eq!(-25, m.cofactor(1, 0).unwrap());
+
+    let m2 = Matrix::<i32>::from([[1, 2, 6], [-5, 8, -4], [2, 6, 4]]);
+    assert_eq!(56, m2.cofactor(0, 0).unwrap());
+    assert_eq!(12, m2.cofactor(0, 1).unwrap());
+    assert_eq!(-46, m2.cofactor(0, 2).unwrap());
+    assert_eq!(-196, m2.determinant().unwrap());
+
+    let m3 = Matrix::<i32>::from([[-2, -8, 3, 5], [-3, 1, 7, 3], [1, 2, -9, 6], [-6, 7, 7, -9]]);
+    assert_eq!(690, m3.cofactor(0, 0).unwrap());
+    assert_eq!(447, m3.cofactor(0, 1).unwrap());
+    assert_eq!(210, m3.cofactor(0, 2).unwrap());
+    assert_eq!(51, m3.cofactor(0, 3).unwrap());
+    assert_eq!(-4071, m3.determinant().unwrap());
 }

@@ -1,5 +1,5 @@
 use std::{
-    ops::{AddAssign, Index, IndexMut, Mul, Neg, Sub},
+    ops::{Add, AddAssign, Index, IndexMut, Mul, Neg, Sub},
     usize,
 };
 
@@ -68,15 +68,23 @@ where
 
     pub fn determinant(&self) -> Result<T, MatrixError>
     where
-        T: Mul<Output = T> + Sub<Output = T>,
+        T: Mul<Output = T> + Sub<Output = T> + Add<Output = T> + Neg<Output = T>,
     {
-        // Determinant is only for 2x2 matrices
-        if self.rows != 2 || self.cols != 2 {
-            let error = format!("Expected 2x2 matrix, got {}x{}", self.rows, self.cols);
+        // Determinant is only for square matrices
+        if self.rows != self.cols {
+            let error = format!("Expected square matrix, got {}x{}", self.rows, self.cols);
             return Err(MatrixError::InvalidArgument(error));
         }
 
-        Ok(self[0][0] * self[1][1] - self[0][1] * self[1][0])
+        let mut det = T::default();
+        if self.cols == 2 {
+            det = self[0][0] * self[1][1] - self[0][1] * self[1][0];
+        } else {
+            for col in 0..self.cols {
+                det = det + self[0][col] * self.cofactor(0, col)?;
+            }
+        }
+        Ok(det)
     }
 
     pub fn submatrix(&self, row: usize, col: usize) -> Result<Self, MatrixError> {
@@ -110,15 +118,14 @@ where
 
     pub fn minor(&self, row: usize, col: usize) -> Result<T, MatrixError>
     where
-        T: Mul<Output = T> + Sub<Output = T>,
+        T: Mul<Output = T> + Sub<Output = T> + Add<Output = T> + Neg<Output = T>,
     {
-        //TODO Implement for larger than 3x3
         self.submatrix(row, col)?.determinant()
     }
 
     pub fn cofactor(&self, row: usize, col: usize) -> Result<T, MatrixError>
     where
-        T: Mul<Output = T> + Sub<Output = T> + Neg<Output = T>,
+        T: Mul<Output = T> + Sub<Output = T> + Add<Output = T> + Neg<Output = T>,
     {
         let mut c = self.minor(row, col)?;
         if (row + col).is_odd() {
