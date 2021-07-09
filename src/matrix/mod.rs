@@ -36,7 +36,7 @@ where
     {
         let mut m: Matrix<T> = Matrix::new(dimensions, dimensions);
         for index in 0..dimensions {
-            m[index][index] = value.clone();
+            m[index][index] = value;
         }
         m
     }
