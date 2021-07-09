@@ -127,3 +127,12 @@ fn test_minor() {
     let m = Matrix::<i32>::from([[3, 5, 0], [2, -1, -7], [6, -1, 5]]);
     assert_eq!(25, m.minor(1, 0).unwrap());
 }
+
+#[test]
+fn test_cofactor() {
+    let m = Matrix::<i32>::from([[3, 5, 0], [2, -1, -7], [6, -1, 5]]);
+    assert_eq!(-12, m.minor(0, 0).unwrap());
+    assert_eq!(-12, m.cofactor(0, 0).unwrap());
+    assert_eq!(25, m.minor(1, 0).unwrap());
+    assert_eq!(-25, m.cofactor(1, 0).unwrap());
+}

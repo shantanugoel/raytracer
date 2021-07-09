@@ -1,8 +1,9 @@
 use std::{
-    ops::{AddAssign, Index, IndexMut, Mul, Sub},
+    ops::{AddAssign, Index, IndexMut, Mul, Neg, Sub},
     usize,
 };
 
+use num::Integer;
 use thiserror::Error;
 
 #[derive(Error, Debug)]
@@ -113,6 +114,17 @@ where
     {
         //TODO Implement for larger than 3x3
         self.submatrix(row, col)?.determinant()
+    }
+
+    pub fn cofactor(&self, row: usize, col: usize) -> Result<T, MatrixError>
+    where
+        T: Mul<Output = T> + Sub<Output = T> + Neg<Output = T>,
+    {
+        let mut c = self.minor(row, col)?;
+        if (row + col).is_odd() {
+            c = c.neg();
+        }
+        Ok(c)
     }
 }
 
