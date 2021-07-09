@@ -30,10 +30,7 @@ where
 
     /// Returns a matrix with diagonal elementts initialized by `value`
     /// Supply 1.0 as the value for a true identity matrix
-    pub fn identity(dimensions: usize, value: T) -> Self
-    where
-        T: Clone,
-    {
+    pub fn identity(dimensions: usize, value: T) -> Self {
         let mut m: Matrix<T> = Matrix::new(dimensions, dimensions);
         for index in 0..dimensions {
             m[index][index] = value;
