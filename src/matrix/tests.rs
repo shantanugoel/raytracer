@@ -230,7 +230,7 @@ fn test_inverse_multiplication() {
 }
 
 #[test]
-fn test_transformations() {
+fn test_transformations_translation() {
     let t = Matrix::translation(5.0, -3.0, 2.0);
     let p = Point::new(-3.0, 4.0, 5.0);
     let expected = Point::new(2.0, 1.0, 7.0);
@@ -242,4 +242,29 @@ fn test_transformations() {
 
     let v = Vector::new(-3.0, 4.0, 5.0);
     assert_eq!(v, (t * v).unwrap());
+}
+
+#[test]
+fn test_transformations_scaling() {
+    let t = Matrix::scaling(2.0, 3.0, 4.0);
+    let p = Point::new(-4.0, 6.0, 8.0);
+    let expected = Point::new(-8.0, 18.0, 32.0);
+    assert_eq!(expected, (t.clone() * p).unwrap());
+
+    let v = Vector::new(-4.0, 6.0, 8.0);
+    let expected2 = Vector::new(-8.0, 18.0, 32.0);
+    assert_eq!(expected2, (t.clone() * v).unwrap());
+
+    let inv = t.clone().inverse().unwrap();
+    let expected3 = Vector::new(-2.0, 2.0, 2.0);
+    assert_eq!(expected3, (inv * v).unwrap());
+}
+
+#[test]
+fn test_transformations_reflection() {
+    // Reflection is scaling by a negative value along an axis, here X
+    let t = Matrix::scaling(-1.0, 1.0, 1.0);
+    let p = Point::new(2.0, 3.0, 4.0);
+    let expected = Point::new(-2.0, 3.0, 4.0);
+    assert_eq!(expected, (t * p).unwrap());
 }

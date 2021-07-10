@@ -44,19 +44,6 @@ where
         m
     }
 
-    pub fn translation(x: T, y: T, z: T) -> Matrix<T>
-    where
-        T: One,
-    {
-        // Supporting only 4x4 translation matrix
-        let dimensions = 4;
-        let mut m = Matrix::identity(dimensions, T::one());
-        m[0][3] = x;
-        m[1][3] = y;
-        m[2][3] = z;
-        m
-    }
-
     pub fn num_rows(&self) -> usize {
         self.rows
     }
@@ -196,6 +183,32 @@ where
                 m[row][col] = (self[row][col] * factor).round() / factor;
             }
         }
+        m
+    }
+
+    pub fn translation(x: T, y: T, z: T) -> Matrix<T>
+    where
+        T: One,
+    {
+        // Supporting only 4x4 translation matrix
+        let dimensions = 4;
+        let mut m = Matrix::identity(dimensions, T::one());
+        m[0][3] = x;
+        m[1][3] = y;
+        m[2][3] = z;
+        m
+    }
+
+    pub fn scaling(x: T, y: T, z: T) -> Matrix<T>
+    where
+        T: One,
+    {
+        // Supporting only 4x4 scaling matrix
+        let dimensions = 4;
+        let mut m = Matrix::identity(dimensions, T::one());
+        m[0][0] = x;
+        m[1][1] = y;
+        m[2][2] = z;
         m
     }
 }
