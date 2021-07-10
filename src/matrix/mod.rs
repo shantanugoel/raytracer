@@ -5,9 +5,11 @@ use std::{
     usize,
 };
 
-use num::{Float, Integer, NumCast, Zero};
+use num::{Float, Integer, NumCast, One, Zero};
 
 use thiserror::Error;
+
+use crate::tuple::IsTuple;
 
 #[derive(Error, Debug)]
 pub enum MatrixError {
@@ -28,7 +30,7 @@ where
 {
     pub fn new(rows: usize, cols: usize) -> Matrix<T> {
         let mut data: Vec<T> = Vec::<T>::with_capacity(rows * cols);
-        data.resize_with(rows * cols, Default::default);
+        data.resize_with(rows * cols, T::default);
         Matrix { rows, cols, data }
     }
 
@@ -39,6 +41,19 @@ where
         for index in 0..dimensions {
             m[index][index] = value;
         }
+        m
+    }
+
+    pub fn translation(x: T, y: T, z: T) -> Matrix<T>
+    where
+        T: One,
+    {
+        // Supporting only 4x4 translation matrix
+        let dimensions = 4;
+        let mut m = Matrix::identity(dimensions, T::one());
+        m[0][3] = x;
+        m[1][3] = y;
+        m[2][3] = z;
         m
     }
 
@@ -228,6 +243,15 @@ where
     }
 }
 
+impl<U> From<U> for Matrix<f64>
+where
+    U: IsTuple,
+{
+    fn from(t: U) -> Self {
+        Matrix::from([t.tuple().x, t.tuple().y, t.tuple().z, t.tuple().w])
+    }
+}
+
 impl<T> Mul for Matrix<T>
 where
     T: Default + Copy + Mul<Output = T> + AddAssign,
@@ -255,6 +279,20 @@ where
             }
         }
         Ok(output)
+    }
+}
+
+// Multiplying matrix with a point or vector
+impl<U> Mul<U> for Matrix<f64>
+where
+    U: IsTuple,
+{
+    type Output = Result<U, MatrixError>;
+    fn mul(self, rhs: U) -> Self::Output {
+        //let mut output = U::new(0.0, 0.0, 0.0);
+        let m = Matrix::from(rhs);
+        let temp = (self * m)?;
+        Ok(U::new(temp[0][0], temp[1][0], temp[2][0]))
     }
 }
 

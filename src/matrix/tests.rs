@@ -1,3 +1,5 @@
+use crate::tuple::{Point, Vector};
+
 use super::*;
 
 #[test]
@@ -225,4 +227,19 @@ fn test_inverse_multiplication() {
     let m3 = (m1.clone() * m2.clone()).unwrap();
 
     assert_eq!(m1, (m3 * m2.inverse().unwrap()).unwrap().limit_precision(5));
+}
+
+#[test]
+fn test_transformations() {
+    let t = Matrix::translation(5.0, -3.0, 2.0);
+    let p = Point::new(-3.0, 4.0, 5.0);
+    let expected = Point::new(2.0, 1.0, 7.0);
+    assert_eq!(expected, (t.clone() * p).unwrap());
+
+    let inv = t.clone().inverse().unwrap();
+    let expected2 = Point::new(-8.0, 7.0, 3.0);
+    assert_eq!(expected2, (inv * p).unwrap());
+
+    let v = Vector::new(-3.0, 4.0, 5.0);
+    assert_eq!(v, (t * v).unwrap());
 }

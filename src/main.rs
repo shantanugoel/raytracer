@@ -12,7 +12,7 @@ use num::ToPrimitive;
 use canvas::Canvas;
 use color::Color;
 use projectiles::{tick, Environment, Projectile};
-use tuple::{Point, Vector};
+use tuple::{IsTuple, Point, Vector};
 
 fn projectile_project() {
     let mut canvas = Canvas::new(900, 550);

@@ -13,6 +13,8 @@ pub struct Tuple {
 
 pub trait IsTuple {
     fn tuple(&self) -> Tuple;
+
+    fn new(x: f64, y: f64, z: f64) -> Self;
 }
 
 impl Tuple {
@@ -120,16 +122,8 @@ impl IsTuple for Point {
     fn tuple(&self) -> Tuple {
         self.0
     }
-}
 
-impl IsTuple for Vector {
-    fn tuple(&self) -> Tuple {
-        self.0
-    }
-}
-
-impl Point {
-    pub fn new(x: f64, y: f64, z: f64) -> Point {
+    fn new(x: f64, y: f64, z: f64) -> Point {
         Point(Tuple {
             x,
             y,
@@ -139,8 +133,12 @@ impl Point {
     }
 }
 
-impl Vector {
-    pub fn new(x: f64, y: f64, z: f64) -> Vector {
+impl IsTuple for Vector {
+    fn tuple(&self) -> Tuple {
+        self.0
+    }
+
+    fn new(x: f64, y: f64, z: f64) -> Vector {
         Vector(Tuple {
             x,
             y,
@@ -148,7 +146,11 @@ impl Vector {
             w: VECTOR_VALUE,
         })
     }
+}
 
+impl Point {}
+
+impl Vector {
     pub fn magnitude(&self) -> f64 {
         self.0.magnitude()
     }
@@ -176,6 +178,12 @@ impl From<Tuple> for Vector {
     }
 }
 
+impl From<[f64; 3]> for Vector {
+    fn from(s: [f64; 3]) -> Self {
+        Vector::new(s[0], s[1], s[2])
+    }
+}
+
 impl From<Tuple> for Point {
     fn from(t: Tuple) -> Self {
         assert!(
@@ -183,6 +191,12 @@ impl From<Tuple> for Point {
             "Attempted implicit conversion from vector to point"
         );
         Point::new(t.x, t.y, t.z)
+    }
+}
+
+impl From<[f64; 3]> for Point {
+    fn from(s: [f64; 3]) -> Self {
+        Point::new(s[0], s[1], s[2])
     }
 }
 
