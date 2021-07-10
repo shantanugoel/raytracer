@@ -3,7 +3,7 @@ use std::{
     usize,
 };
 
-use num::Integer;
+use num::{Integer, Zero};
 use thiserror::Error;
 
 #[derive(Error, Debug)]
@@ -132,6 +132,19 @@ where
             c = c.neg();
         }
         Ok(c)
+    }
+
+    pub fn is_invertible(&self) -> Result<bool, MatrixError>
+    where
+        T: Mul<Output = T>
+            + Sub<Output = T>
+            + Add<Output = T>
+            + Neg<Output = T>
+            + Zero
+            + PartialEq
+            + Eq,
+    {
+        Ok(self.determinant()? != T::zero())
     }
 }
 

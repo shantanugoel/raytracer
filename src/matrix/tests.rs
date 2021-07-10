@@ -149,3 +149,13 @@ fn test_cofactor() {
     assert_eq!(51, m3.cofactor(0, 3).unwrap());
     assert_eq!(-4071, m3.determinant().unwrap());
 }
+
+#[test]
+fn test_invertible() {
+    let m1 = Matrix::<i32>::from([[6, 4, 4, 4], [5, 5, 7, 6], [4, -9, 3, -7], [9, 1, 7, -6]]);
+    let m2 = Matrix::<i32>::from([[-4, 2, -2, -3], [9, 6, 2, 6], [0, -5, 1, -5], [0, 0, 0, 0]]);
+    assert_eq!(-2120, m1.determinant().unwrap());
+    assert!(m1.is_invertible().unwrap());
+    assert_eq!(0, m2.determinant().unwrap());
+    assert!(!m2.is_invertible().unwrap());
+}
