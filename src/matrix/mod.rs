@@ -1,9 +1,12 @@
+//TODO Remove this
+#![allow(dead_code)]
 use std::{
-    ops::{Add, AddAssign, Index, IndexMut, Mul, Neg, Sub},
+    ops::{Add, AddAssign, Div, Index, IndexMut, Mul, Neg, Sub},
     usize,
 };
 
-use num::{Integer, Zero};
+use num::{Float, Integer, NumCast, Zero};
+
 use thiserror::Error;
 
 #[derive(Error, Debug)]
@@ -136,15 +139,49 @@ where
 
     pub fn is_invertible(&self) -> Result<bool, MatrixError>
     where
+        T: Mul<Output = T> + Sub<Output = T> + Add<Output = T> + Neg<Output = T> + Zero,
+    {
+        Ok(!self.determinant()?.is_zero())
+    }
+
+    pub fn inverse(&self) -> Result<Self, MatrixError>
+    where
         T: Mul<Output = T>
             + Sub<Output = T>
             + Add<Output = T>
             + Neg<Output = T>
-            + Zero
-            + PartialEq
-            + Eq,
+            + Div<Output = T>
+            + Zero,
     {
-        Ok(self.determinant()? != T::zero())
+        if !(self.is_invertible()?) {
+            return Err(MatrixError::InvalidArgument(String::from(
+                "Provided matrix is not invertible",
+            )));
+        }
+        let mut inverted = Matrix::new(self.rows, self.cols);
+        let determinant = self.determinant()?;
+        for row in 0..self.rows {
+            for col in 0..self.cols {
+                let c = self.cofactor(row, col)?;
+                inverted[col][row] = c / determinant;
+            }
+        }
+
+        Ok(inverted)
+    }
+
+    pub fn limit_precision(&self, num_places: i32) -> Self
+    where
+        T: Float,
+    {
+        let mut m = Matrix::<T>::new(self.rows, self.cols);
+        let factor: T = NumCast::from(10.0.powi(num_places)).unwrap();
+        for row in 0..self.rows {
+            for col in 0..self.cols {
+                m[row][col] = (self[row][col] * factor).round() / factor;
+            }
+        }
+        m
     }
 }
 
