@@ -345,3 +345,16 @@ fn test_shearing() {
         (Matrix::shearing(0.0, 0.0, 0.0, 0.0, 0.0, 1.0) * p).unwrap()
     );
 }
+
+#[test]
+fn test_chain_transformations() {
+    let p = Point::new(1.0, 0.0, 1.0);
+    let rotate = Matrix::rotation(Axis::X, std::f64::consts::FRAC_PI_2);
+    let scaling = Matrix::scaling(5.0, 5.0, 5.0);
+    let translation = Matrix::translation(10.0, 5.0, 7.0);
+
+    assert_eq!(
+        Point::new(15.0, 0.0, 7.0),
+        (((translation * scaling).unwrap() * rotate).unwrap() * p).unwrap()
+    );
+}
