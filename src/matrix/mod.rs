@@ -205,6 +205,13 @@ where
         m
     }
 
+    pub fn translate(self, x: T, y: T, z: T) -> Result<Matrix<T>, MatrixError>
+    where
+        T: One + Default + Copy + Mul<Output = T> + AddAssign,
+    {
+        Matrix::translation(x, y, z) * self
+    }
+
     pub fn scaling(x: T, y: T, z: T) -> Matrix<T>
     where
         T: One,
@@ -216,6 +223,13 @@ where
         m[1][1] = y;
         m[2][2] = z;
         m
+    }
+
+    pub fn scale(self, x: T, y: T, z: T) -> Result<Matrix<T>, MatrixError>
+    where
+        T: One + Default + Copy + Mul<Output = T> + AddAssign,
+    {
+        Matrix::scaling(x, y, z) * self
     }
 
     pub fn rotation(axis: Axis, radian: T) -> Matrix<T>
@@ -248,6 +262,13 @@ where
         m
     }
 
+    pub fn rotate(self, axis: Axis, radian: T) -> Result<Matrix<T>, MatrixError>
+    where
+        T: Float + One + Default + Copy + Mul<Output = T> + AddAssign,
+    {
+        Matrix::rotation(axis, radian) * self
+    }
+
     pub fn shearing(xy: T, xz: T, yx: T, yz: T, zx: T, zy: T) -> Matrix<T>
     where
         T: Float + One,
@@ -260,6 +281,13 @@ where
         m[2][0] = zx;
         m[2][1] = zy;
         m
+    }
+
+    pub fn shear(self, xy: T, xz: T, yx: T, yz: T, zx: T, zy: T) -> Result<Matrix<T>, MatrixError>
+    where
+        T: Float + One + Default + Copy + Mul<Output = T> + AddAssign,
+    {
+        Matrix::shearing(xy, xz, yx, yz, zx, zy) * self
     }
 }
 

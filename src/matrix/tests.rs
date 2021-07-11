@@ -357,4 +357,14 @@ fn test_chain_transformations() {
         Point::new(15.0, 0.0, 7.0),
         (((translation * scaling).unwrap() * rotate).unwrap() * p).unwrap()
     );
+
+    let transform = Matrix::identity(4, 1.0)
+        .rotate(Axis::X, std::f64::consts::FRAC_PI_2)
+        .unwrap()
+        .scale(5.0, 5.0, 5.0)
+        .unwrap()
+        .translate(10.0, 5.0, 7.0)
+        .unwrap();
+
+    assert_eq!(Point::new(15.0, 0.0, 7.0), (transform * p).unwrap());
 }
