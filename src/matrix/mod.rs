@@ -24,6 +24,12 @@ pub struct Matrix<T> {
     data: Vec<T>,
 }
 
+pub enum Axis {
+    X,
+    Y,
+    Z,
+}
+
 impl<T> Matrix<T>
 where
     T: Default + Copy,
@@ -209,6 +215,36 @@ where
         m[0][0] = x;
         m[1][1] = y;
         m[2][2] = z;
+        m
+    }
+
+    pub fn rotation(axis: Axis, radian: T) -> Matrix<T>
+    where
+        T: Float + One,
+    {
+        let cosr = radian.cos();
+        let sinr = radian.sin();
+        let mut m = Matrix::<T>::identity(4, T::one());
+        match axis {
+            Axis::X => {
+                m[1][1] = cosr;
+                m[1][2] = sinr.neg();
+                m[2][1] = sinr;
+                m[2][2] = cosr;
+            }
+            Axis::Y => {
+                m[0][0] = cosr;
+                m[2][0] = sinr.neg();
+                m[0][2] = sinr;
+                m[2][2] = cosr;
+            }
+            Axis::Z => {
+                m[0][0] = cosr;
+                m[0][1] = sinr.neg();
+                m[1][0] = sinr;
+                m[1][1] = cosr;
+            }
+        }
         m
     }
 }

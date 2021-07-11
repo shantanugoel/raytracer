@@ -109,10 +109,10 @@ const VECTOR_VALUE: f64 = 0.0;
 trait IsPoint {}
 trait IsVector {}
 
-#[derive(Debug, PartialEq, Clone, Copy)]
+#[derive(Debug, Clone, Copy)]
 pub struct Point(pub Tuple);
 
-#[derive(Debug, PartialEq, Clone, Copy)]
+#[derive(Debug, Clone, Copy)]
 pub struct Vector(pub Tuple);
 
 impl IsPoint for Point {}
@@ -145,6 +145,22 @@ impl IsTuple for Vector {
             z,
             w: VECTOR_VALUE,
         })
+    }
+}
+
+impl PartialEq for Point {
+    fn eq(&self, other: &Self) -> bool {
+        is_eq_float(&self.0.x, &other.0.x)
+            && is_eq_float(&self.0.y, &other.0.y)
+            && is_eq_float(&self.0.z, &other.0.z)
+    }
+}
+
+impl PartialEq for Vector {
+    fn eq(&self, other: &Self) -> bool {
+        is_eq_float(&self.0.x, &other.0.x)
+            && is_eq_float(&self.0.y, &other.0.y)
+            && is_eq_float(&self.0.z, &other.0.z)
     }
 }
 

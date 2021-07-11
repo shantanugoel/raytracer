@@ -268,3 +268,45 @@ fn test_transformations_reflection() {
     let expected = Point::new(-2.0, 3.0, 4.0);
     assert_eq!(expected, (t * p).unwrap());
 }
+
+#[test]
+fn test_rotation_x() {
+    let p = Point::new(0.0, 1.0, 0.0);
+    let half_quarter = Matrix::rotation(Axis::X, std::f64::consts::FRAC_PI_4);
+    let full_quarter = Matrix::rotation(Axis::X, std::f64::consts::FRAC_PI_2);
+    assert_eq!(
+        Point::new(0.0, 2.0.sqrt() / 2.0, 2.0.sqrt() / 2.0),
+        (half_quarter.clone() * p).unwrap()
+    );
+    assert_eq!(Point::new(0.0, 0.0, 1.0), (full_quarter * p).unwrap());
+
+    let inv = half_quarter.inverse().unwrap();
+    assert_eq!(
+        Point::new(0.0, 2.0.sqrt() / 2.0, 2.0.sqrt().neg() / 2.0),
+        (inv * p).unwrap()
+    );
+}
+
+#[test]
+fn test_rotation_y() {
+    let p = Point::new(0.0, 0.0, 1.0);
+    let half_quarter = Matrix::rotation(Axis::Y, std::f64::consts::FRAC_PI_4);
+    let full_quarter = Matrix::rotation(Axis::Y, std::f64::consts::FRAC_PI_2);
+    assert_eq!(
+        Point::new(2.0.sqrt() / 2.0, 0.0, 2.0.sqrt() / 2.0),
+        (half_quarter * p).unwrap()
+    );
+    assert_eq!(Point::new(1.0, 0.0, 0.0), (full_quarter * p).unwrap());
+}
+
+#[test]
+fn test_rotation_z() {
+    let p = Point::new(0.0, 1.0, 0.0);
+    let half_quarter = Matrix::rotation(Axis::Z, std::f64::consts::FRAC_PI_4);
+    let full_quarter = Matrix::rotation(Axis::Z, std::f64::consts::FRAC_PI_2);
+    assert_eq!(
+        Point::new(2.0.sqrt().neg() / 2.0, 2.0.sqrt() / 2.0, 0.0),
+        (half_quarter * p).unwrap()
+    );
+    assert_eq!(Point::new(-1.0, 0.0, 0.0), (full_quarter * p).unwrap());
+}
