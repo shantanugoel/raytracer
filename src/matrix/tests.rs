@@ -310,3 +310,38 @@ fn test_rotation_z() {
     );
     assert_eq!(Point::new(-1.0, 0.0, 0.0), (full_quarter * p).unwrap());
 }
+
+#[test]
+fn test_shearing() {
+    let p = Point::new(2.0, 3.0, 4.0);
+
+    assert_eq!(
+        Point::new(5.0, 3.0, 4.0),
+        (Matrix::shearing(1.0, 0.0, 0.0, 0.0, 0.0, 0.0) * p).unwrap()
+    );
+
+    assert_eq!(
+        Point::new(6.0, 3.0, 4.0),
+        (Matrix::shearing(0.0, 1.0, 0.0, 0.0, 0.0, 0.0) * p).unwrap()
+    );
+
+    assert_eq!(
+        Point::new(2.0, 5.0, 4.0),
+        (Matrix::shearing(0.0, 0.0, 1.0, 0.0, 0.0, 0.0) * p).unwrap()
+    );
+
+    assert_eq!(
+        Point::new(2.0, 7.0, 4.0),
+        (Matrix::shearing(0.0, 0.0, 0.0, 1.0, 0.0, 0.0) * p).unwrap()
+    );
+
+    assert_eq!(
+        Point::new(2.0, 3.0, 6.0),
+        (Matrix::shearing(0.0, 0.0, 0.0, 0.0, 1.0, 0.0) * p).unwrap()
+    );
+
+    assert_eq!(
+        Point::new(2.0, 3.0, 7.0),
+        (Matrix::shearing(0.0, 0.0, 0.0, 0.0, 0.0, 1.0) * p).unwrap()
+    );
+}

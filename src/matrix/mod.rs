@@ -247,6 +247,20 @@ where
         }
         m
     }
+
+    pub fn shearing(xy: T, xz: T, yx: T, yz: T, zx: T, zy: T) -> Matrix<T>
+    where
+        T: Float + One,
+    {
+        let mut m = Matrix::<T>::identity(4, T::one());
+        m[0][1] = xy;
+        m[0][2] = xz;
+        m[1][0] = yx;
+        m[1][2] = yz;
+        m[2][0] = zx;
+        m[2][1] = zy;
+        m
+    }
 }
 
 impl<T> Index<usize> for Matrix<T> {
