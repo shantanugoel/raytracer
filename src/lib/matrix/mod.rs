@@ -1,5 +1,3 @@
-//TODO Remove this
-#![allow(dead_code)]
 use std::{
     ops::{Add, AddAssign, Div, Index, IndexMut, Mul, Neg, Sub},
     usize,

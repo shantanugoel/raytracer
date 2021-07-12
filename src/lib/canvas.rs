@@ -22,7 +22,6 @@ impl Canvas {
         self.data[y][x] = color;
     }
 
-    #[allow(dead_code)]
     pub fn pixel_at(&self, x: usize, y: usize) -> Color {
         self.data[y][x]
     }

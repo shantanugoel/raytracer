@@ -2,7 +2,7 @@ use std::{fs::File, io::Write};
 
 use num::ToPrimitive;
 
-use crate::{
+use raytracer::{
     canvas::Canvas,
     color::Color,
     matrix::{Axis, Matrix},
@@ -14,16 +14,6 @@ pub fn make_clock() {
     let canvas_height = 600;
     let canvas_width = 600;
     let mut canvas = Canvas::new(canvas_width, canvas_height);
-
-    // let center = (Matrix::identity(4, 1.0)
-    //     .translate(
-    //         (canvas_width / 2).to_f64().unwrap(),
-    //         (canvas_height / 2).to_f64().unwrap(),
-    //         0.,
-    //     )
-    //     .unwrap()
-    //     * origin)
-    //     .unwrap();
 
     let num_points = 12; // Number of hours
     let mut points: Vec<Point> = Vec::with_capacity(num_points);
@@ -69,4 +59,8 @@ pub fn make_clock() {
 
     let mut file = File::create("clock.ppm").unwrap();
     file.write_all(canvas.to_ppm().as_bytes()).unwrap();
+}
+
+fn main() {
+    make_clock();
 }

@@ -1,20 +1,13 @@
-mod canvas;
-mod clock;
-mod color;
-mod matrix;
-mod projectiles;
-mod rays;
-mod tuple;
-mod utils;
-
 use std::{fs::File, io::Write};
 
 use num::ToPrimitive;
 
-use canvas::Canvas;
-use color::Color;
-use projectiles::{tick, Environment, Projectile};
-use tuple::{IsTuple, Point, Vector};
+use raytracer::{
+    canvas::Canvas,
+    color::Color,
+    projectiles::{tick, Environment, Projectile},
+    tuple::{IsTuple, Point, Vector},
+};
 
 fn projectile_project() {
     let mut canvas = Canvas::new(900, 550);
@@ -54,5 +47,4 @@ fn projectile_project() {
 
 fn main() {
     projectile_project();
-    clock::make_clock();
 }
