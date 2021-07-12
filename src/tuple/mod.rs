@@ -259,20 +259,6 @@ impl Sub<Vector> for Vector {
     }
 }
 
-impl Mul<f64> for Point {
-    type Output = Point;
-    fn mul(self, rhs: f64) -> Self::Output {
-        Point::from(self.0 * rhs)
-    }
-}
-
-impl Mul<Point> for f64 {
-    type Output = Point;
-    fn mul(self, rhs: Point) -> Self::Output {
-        Point::from(self * rhs.0)
-    }
-}
-
 impl Mul<f64> for Vector {
     type Output = Vector;
     fn mul(self, rhs: f64) -> Self::Output {
