@@ -3,6 +3,7 @@ mod clock;
 mod color;
 mod matrix;
 mod projectiles;
+mod rays;
 mod tuple;
 mod utils;
 
