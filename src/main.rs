@@ -1,4 +1,5 @@
 mod canvas;
+mod clock;
 mod color;
 mod matrix;
 mod projectiles;
@@ -52,4 +53,5 @@ fn projectile_project() {
 
 fn main() {
     projectile_project();
+    clock::make_clock();
 }
