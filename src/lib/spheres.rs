@@ -1,7 +1,7 @@
 use std::ops::Neg;
 
+use crate::tuple::Point;
 use crate::{intersections::Intersection, rays::Ray};
-use crate::{tuple::Point, utils::is_eq_float};
 
 pub struct Sphere {
     origin: Point,
@@ -24,7 +24,7 @@ impl Intersection for Sphere {
 
         let mut intersections: Vec<f64> = Vec::with_capacity(2);
         println!("{} {} {} {}", a, b, c, discriminant);
-        if !is_eq_float(&discriminant, &0.0) {
+        if discriminant.ge(&0.0) {
             intersections.push((b.neg() - discriminant.sqrt()) / (2.0 * a));
             intersections.push((b.neg() + discriminant.sqrt()) / (2.0 * a));
         }
