@@ -3,7 +3,6 @@
 mod tests {
     use raytracer::{
         intersections::Intersectable,
-        objects::Object,
         rays::Ray,
         spheres::Sphere,
         tuple::{IsTuple, Point, Vector},
@@ -43,7 +42,7 @@ mod tests {
         let r6 = Ray::new(Point::new(0.0, 0.0, -5.0), Vector::new(0.0, 0.0, 1.0));
         let xs6 = s.intersect(r6);
         assert_eq!(2, xs6.len());
-        assert_eq!(Object::Sphere(s), xs6[0].object);
-        assert_eq!(Object::Sphere(s), xs6[1].object);
+        assert_eq!(s, xs6[0].object);
+        assert_eq!(s, xs6[1].object);
     }
 }
