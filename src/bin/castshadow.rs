@@ -5,6 +5,7 @@ use raytracer::{
     canvas::Canvas,
     color::Color,
     intersections::{Intersectable, Intersection},
+    matrix::Matrix,
     rays::Ray,
     spheres::Sphere,
     tuple::{IsTuple, Point},
@@ -20,7 +21,12 @@ fn main() {
 
     let mut canvas = Canvas::new(canvas_pixels, canvas_pixels);
     let color = Color::new(1.0, 0.0, 0.0);
-    let shape = Sphere::new(Point::new(0.0, 0.0, 0.0), 1.0);
+    let mut shape = Sphere::new(Point::new(0.0, 0.0, 0.0), 1.0);
+
+    // let m = Matrix::scaling(1.0, 0.5, 1.0);
+    let m = (&Matrix::shearing(1.0, 0.0, 0.0, 0.0, 0.0, 0.0) * &Matrix::scaling(0.5, 1.0, 1.0))
+        .unwrap();
+    shape.set_transform(m);
 
     for y in 0..canvas_pixels {
         let world_y = half - pixel_size * y.to_f64().unwrap();
