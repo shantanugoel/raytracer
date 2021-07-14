@@ -42,8 +42,8 @@ mod tests {
         let r6 = Ray::new(Point::new(0.0, 0.0, -5.0), Vector::new(0.0, 0.0, 1.0));
         let xs6 = s.intersect(r6);
         assert_eq!(2, xs6.len());
-        assert_eq!(s, xs6[0].object);
-        assert_eq!(s, xs6[1].object);
+        assert_eq!(s, *xs6[0].object);
+        assert_eq!(s, *xs6[1].object);
     }
 
     #[test]
@@ -52,38 +52,38 @@ mod tests {
 
         // All intersections with positive t
         let mut is1: Vec<Intersection<Sphere>> = Vec::new();
-        let i11 = Intersection::new(1.0, s);
-        let i12 = Intersection::new(2.0, s);
-        is1.push(i11);
+        let i11 = Intersection::new(1.0, &s);
+        let i12 = Intersection::new(2.0, &s);
+        is1.push(i11.clone());
         is1.push(i12);
         assert_eq!(i11, Intersection::hit(is1).unwrap());
 
         // Some intersections with negative t
         let mut is2: Vec<Intersection<Sphere>> = Vec::new();
-        let i21 = Intersection::new(-1.0, s);
-        let i22 = Intersection::new(2.0, s);
+        let i21 = Intersection::new(-1.0, &s);
+        let i22 = Intersection::new(2.0, &s);
         is2.push(i21);
-        is2.push(i22);
+        is2.push(i22.clone());
         assert_eq!(i22, Intersection::hit(is2).unwrap());
 
         // All intersection with negative t
         let mut is3: Vec<Intersection<Sphere>> = Vec::new();
-        let i31 = Intersection::new(-1.0, s);
-        let i32 = Intersection::new(-2.0, s);
+        let i31 = Intersection::new(-1.0, &s);
+        let i32 = Intersection::new(-2.0, &s);
         is3.push(i31);
         is3.push(i32);
         assert_eq!(None, Intersection::hit(is3));
 
         // Test that it always returns lowest non negative intersection
         let mut is4: Vec<Intersection<Sphere>> = Vec::new();
-        let i41 = Intersection::new(5.0, s);
-        let i42 = Intersection::new(7.0, s);
-        let i43 = Intersection::new(-3.0, s);
-        let i44 = Intersection::new(2.0, s);
+        let i41 = Intersection::new(5.0, &s);
+        let i42 = Intersection::new(7.0, &s);
+        let i43 = Intersection::new(-3.0, &s);
+        let i44 = Intersection::new(2.0, &s);
         is4.push(i41);
         is4.push(i42);
         is4.push(i43);
-        is4.push(i44);
+        is4.push(i44.clone());
         assert_eq!(i44, Intersection::hit(is4).unwrap());
     }
 }

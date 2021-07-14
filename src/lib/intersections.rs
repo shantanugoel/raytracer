@@ -7,16 +7,16 @@ pub trait Intersectable {
 }
 
 #[derive(Debug, Clone, Copy, PartialEq)]
-pub struct Intersection<T> {
+pub struct Intersection<'a, T> {
     pub time: f64,
-    pub object: T,
+    pub object: &'a T,
 }
 
-impl<T> Intersection<T>
+impl<'a, T> Intersection<'a, T>
 where
     T: Intersectable,
 {
-    pub fn new(time: f64, object: T) -> Self {
+    pub fn new(time: f64, object: &'a T) -> Self {
         Intersection { time, object }
     }
 
