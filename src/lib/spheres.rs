@@ -2,7 +2,7 @@ use std::ops::Neg;
 
 use crate::{
     intersections::{Intersectable, Intersection},
-    matrix::Matrix,
+    matrix::{Matrix, MatrixError},
     rays::Ray,
     tuple::Point,
 };
@@ -23,18 +23,22 @@ impl Sphere {
             transform: m,
         }
     }
+
+    pub fn set_transform(&mut self, m: Matrix<f64>) {
+        self.transform = m;
+    }
 }
 
 impl Intersectable for Sphere {
-    fn intersect(&self, r: Ray) -> Vec<Intersection<Sphere>> {
-        let sphere_to_ray = r.origin - self.origin;
-        let a = r.direction.dot(r.direction);
-        let b = 2.0 * r.direction.dot(sphere_to_ray);
+    fn intersect(&self, r: Ray) -> Result<Vec<Intersection<Sphere>>, MatrixError> {
+        let r2 = r.transform(&self.transform.inverse()?)?;
+        let sphere_to_ray = r2.origin - self.origin;
+        let a = r2.direction.dot(r2.direction);
+        let b = 2.0 * r2.direction.dot(sphere_to_ray);
         let c = sphere_to_ray.dot(sphere_to_ray) - 1.0;
         let discriminant = b.powf(2.0) - 4.0 * a * c;
 
         let mut intersections: Vec<Intersection<Sphere>> = Vec::new();
-        println!("{} {} {} {}", a, b, c, discriminant);
         if discriminant.ge(&0.0) {
             intersections.push(Intersection::new(
                 (b.neg() - discriminant.sqrt()) / (2.0 * a),
@@ -45,7 +49,7 @@ impl Intersectable for Sphere {
                 self,
             ));
         }
-        intersections
+        Ok(intersections)
     }
 }
 

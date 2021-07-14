@@ -3,6 +3,7 @@
 mod tests {
     use raytracer::{
         intersections::{Intersectable, Intersection},
+        matrix::Matrix,
         rays::Ray,
         spheres::Sphere,
         tuple::{IsTuple, Point, Vector},
@@ -12,38 +13,53 @@ mod tests {
     fn test_sphere_ray_intersection() {
         let r1 = Ray::new(Point::new(0.0, 0.0, -5.0), Vector::new(0.0, 0.0, 1.0));
         let s = Sphere::new(Point::new(0.0, 0.0, 0.0), 1.0);
-        let xs1 = s.intersect(r1);
+        let xs1 = s.intersect(r1).unwrap();
         assert_eq!(2, xs1.len());
         assert_eq!(4.0, xs1[0].time);
         assert_eq!(6.0, xs1[1].time);
 
         let r2 = Ray::new(Point::new(0.0, 1.0, -5.0), Vector::new(0.0, 0.0, 1.0));
-        let xs2 = s.intersect(r2);
+        let xs2 = s.intersect(r2).unwrap();
         assert_eq!(2, xs2.len());
         assert_eq!(5.0, xs2[0].time);
         assert_eq!(5.0, xs2[1].time);
 
         let r3 = Ray::new(Point::new(0.0, 2.0, -5.0), Vector::new(0.0, 0.0, 1.0));
-        let xs3 = s.intersect(r3);
+        let xs3 = s.intersect(r3).unwrap();
         assert_eq!(0, xs3.len());
 
         let r4 = Ray::new(Point::new(0.0, 0.0, 0.0), Vector::new(0.0, 0.0, 1.0));
-        let xs4 = s.intersect(r4);
+        let xs4 = s.intersect(r4).unwrap();
         assert_eq!(2, xs4.len());
         assert_eq!(-1.0, xs4[0].time);
         assert_eq!(1.0, xs4[1].time);
 
         let r5 = Ray::new(Point::new(0.0, 0.0, 5.0), Vector::new(0.0, 0.0, 1.0));
-        let xs5 = s.intersect(r5);
+        let xs5 = s.intersect(r5).unwrap();
         assert_eq!(2, xs5.len());
         assert_eq!(-6.0, xs5[0].time);
         assert_eq!(-4.0, xs5[1].time);
 
         let r6 = Ray::new(Point::new(0.0, 0.0, -5.0), Vector::new(0.0, 0.0, 1.0));
-        let xs6 = s.intersect(r6);
+        let xs6 = s.intersect(r6).unwrap();
         assert_eq!(2, xs6.len());
         assert_eq!(s, *xs6[0].object);
         assert_eq!(s, *xs6[1].object);
+    }
+
+    #[test]
+    fn test_sphere_ray_intersection_with_transform() {
+        let r = Ray::new(Point::new(0.0, 0.0, -5.0), Vector::new(0.0, 0.0, 1.0));
+        let mut s = Sphere::new(Point::new(0.0, 0.0, 0.0), 1.0);
+        s.set_transform(Matrix::scaling(2.0, 2.0, 2.0));
+        let xs = s.intersect(r.clone()).unwrap();
+        assert_eq!(2, xs.len());
+        assert_eq!(3.0, xs[0].time);
+        assert_eq!(7.0, xs[1].time);
+
+        s.set_transform(Matrix::translation(5.0, 0.0, 0.0));
+        let xs2 = s.intersect(r).unwrap();
+        assert_eq!(0, xs2.len());
     }
 
     #[test]
