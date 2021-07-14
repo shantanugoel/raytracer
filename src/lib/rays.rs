@@ -17,10 +17,10 @@ impl Ray {
         self.origin + self.direction * t
     }
 
-    pub fn transform(&self, m: Matrix<f64>) -> Result<Self, MatrixError> {
+    pub fn transform(&self, m: &Matrix<f64>) -> Result<Self, MatrixError> {
         Ok(Ray {
-            origin: (m.clone() * self.origin)?,
-            direction: (m.clone() * self.direction)?,
+            origin: (m * self.origin)?,
+            direction: (m * self.direction)?,
         })
     }
 }
@@ -45,7 +45,7 @@ mod tests {
     fn test_translate_ray() {
         let ray = Ray::new(Point::new(1.0, 2.0, 3.0), Vector::new(0.0, 1.0, 0.0));
         let m = Matrix::translation(3.0, 4.0, 5.0);
-        let ray2 = ray.transform(m).unwrap();
+        let ray2 = ray.transform(&m).unwrap();
         assert_eq!(Point::new(4.0, 6.0, 8.0), ray2.origin);
         assert_eq!(Vector::new(0.0, 1.0, 0.0), ray2.direction);
     }
@@ -54,7 +54,7 @@ mod tests {
     fn test_scale_ray() {
         let ray = Ray::new(Point::new(1.0, 2.0, 3.0), Vector::new(0.0, 1.0, 0.0));
         let m = Matrix::scaling(2.0, 3.0, 4.0);
-        let ray2 = ray.transform(m).unwrap();
+        let ray2 = ray.transform(&m).unwrap();
         assert_eq!(Point::new(2.0, 6.0, 12.0), ray2.origin);
         assert_eq!(Vector::new(0.0, 3.0, 0.0), ray2.direction);
     }

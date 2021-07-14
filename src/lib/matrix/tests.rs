@@ -67,21 +67,21 @@ fn test_multiply_matrix() {
         [16, 26, 46, 42],
     ]);
 
-    assert_eq!(expected, (m1 * m2).unwrap());
+    assert_eq!(expected, (&m1 * &m2).unwrap());
 
     let m3: Matrix<i32> = Matrix::from([[1, 2, 3, 4], [2, 4, 4, 2], [8, 6, 4, 1], [0, 0, 0, 1]]);
     let slice = [1, 2, 3, 1];
     let m4 = Matrix::from(slice);
     let expected2: Matrix<i32> = Matrix::from([18, 24, 33, 1]);
-    assert_eq!(expected2, (m3.clone() * slice).unwrap());
-    assert_eq!(expected2, (m3 * m4).unwrap());
+    assert_eq!(expected2, (&m3 * slice).unwrap());
+    assert_eq!(expected2, (&m3 * &m4).unwrap());
 }
 
 #[test]
 fn test_multiply_matrix_error() {
     let m1: Matrix<i32> = Matrix::from([[1, 2, 3, 4], [5, 6, 7, 8]]);
     let m2: Matrix<i32> = Matrix::from([[-2, 1, 2], [3, 2, 1], [4, 3, 6]]);
-    assert!((m1 * m2).is_err());
+    assert!((&m1 * &m2).is_err());
 }
 
 #[test]
@@ -90,7 +90,7 @@ fn test_identity() {
     let expected = Matrix::<f64>::from([[1.0, 0.0], [0.0, 1.0]]);
     assert_eq!(expected, m1);
     let m2 = Matrix::from([[1.0, 2.0], [5.0, 6.0]]);
-    assert_eq!(m2, (m2.clone() * m1).unwrap());
+    assert_eq!(m2, (&m2 * &m1).unwrap());
 }
 
 #[test]
@@ -224,9 +224,12 @@ fn test_inverse_multiplication() {
         [6.0, -2.0, 0.0, 5.0],
     ]);
 
-    let m3 = (m1.clone() * m2.clone()).unwrap();
+    let m3 = (&m1 * &m2).unwrap();
 
-    assert_eq!(m1, (m3 * m2.inverse().unwrap()).unwrap().limit_precision(5));
+    assert_eq!(
+        m1,
+        (&m3 * &m2.inverse().unwrap()).unwrap().limit_precision(5)
+    );
 }
 
 #[test]
@@ -234,14 +237,14 @@ fn test_transformations_translation() {
     let t = Matrix::translation(5.0, -3.0, 2.0);
     let p = Point::new(-3.0, 4.0, 5.0);
     let expected = Point::new(2.0, 1.0, 7.0);
-    assert_eq!(expected, (t.clone() * p).unwrap());
+    assert_eq!(expected, (&t * p).unwrap());
 
     let inv = t.clone().inverse().unwrap();
     let expected2 = Point::new(-8.0, 7.0, 3.0);
-    assert_eq!(expected2, (inv * p).unwrap());
+    assert_eq!(expected2, (&inv * p).unwrap());
 
     let v = Vector::new(-3.0, 4.0, 5.0);
-    assert_eq!(v, (t * v).unwrap());
+    assert_eq!(v, (&t * v).unwrap());
 }
 
 #[test]
@@ -249,15 +252,15 @@ fn test_transformations_scaling() {
     let t = Matrix::scaling(2.0, 3.0, 4.0);
     let p = Point::new(-4.0, 6.0, 8.0);
     let expected = Point::new(-8.0, 18.0, 32.0);
-    assert_eq!(expected, (t.clone() * p).unwrap());
+    assert_eq!(expected, (&t * p).unwrap());
 
     let v = Vector::new(-4.0, 6.0, 8.0);
     let expected2 = Vector::new(-8.0, 18.0, 32.0);
-    assert_eq!(expected2, (t.clone() * v).unwrap());
+    assert_eq!(expected2, (&t * v).unwrap());
 
-    let inv = t.clone().inverse().unwrap();
+    let inv = t.inverse().unwrap();
     let expected3 = Vector::new(-2.0, 2.0, 2.0);
-    assert_eq!(expected3, (inv * v).unwrap());
+    assert_eq!(expected3, (&inv * v).unwrap());
 }
 
 #[test]
@@ -266,7 +269,7 @@ fn test_transformations_reflection() {
     let t = Matrix::scaling(-1.0, 1.0, 1.0);
     let p = Point::new(2.0, 3.0, 4.0);
     let expected = Point::new(-2.0, 3.0, 4.0);
-    assert_eq!(expected, (t * p).unwrap());
+    assert_eq!(expected, (&t * p).unwrap());
 }
 
 #[test]
@@ -276,14 +279,14 @@ fn test_rotation_x() {
     let full_quarter = Matrix::rotation(Axis::X, std::f64::consts::FRAC_PI_2);
     assert_eq!(
         Point::new(0.0, 2.0.sqrt() / 2.0, 2.0.sqrt() / 2.0),
-        (half_quarter.clone() * p).unwrap()
+        (&half_quarter * p).unwrap()
     );
-    assert_eq!(Point::new(0.0, 0.0, 1.0), (full_quarter * p).unwrap());
+    assert_eq!(Point::new(0.0, 0.0, 1.0), (&full_quarter * p).unwrap());
 
     let inv = half_quarter.inverse().unwrap();
     assert_eq!(
         Point::new(0.0, 2.0.sqrt() / 2.0, 2.0.sqrt().neg() / 2.0),
-        (inv * p).unwrap()
+        (&inv * p).unwrap()
     );
 }
 
@@ -294,9 +297,9 @@ fn test_rotation_y() {
     let full_quarter = Matrix::rotation(Axis::Y, std::f64::consts::FRAC_PI_2);
     assert_eq!(
         Point::new(2.0.sqrt() / 2.0, 0.0, 2.0.sqrt() / 2.0),
-        (half_quarter * p).unwrap()
+        (&half_quarter * p).unwrap()
     );
-    assert_eq!(Point::new(1.0, 0.0, 0.0), (full_quarter * p).unwrap());
+    assert_eq!(Point::new(1.0, 0.0, 0.0), (&full_quarter * p).unwrap());
 }
 
 #[test]
@@ -306,9 +309,9 @@ fn test_rotation_z() {
     let full_quarter = Matrix::rotation(Axis::Z, std::f64::consts::FRAC_PI_2);
     assert_eq!(
         Point::new(2.0.sqrt().neg() / 2.0, 2.0.sqrt() / 2.0, 0.0),
-        (half_quarter * p).unwrap()
+        (&half_quarter * p).unwrap()
     );
-    assert_eq!(Point::new(-1.0, 0.0, 0.0), (full_quarter * p).unwrap());
+    assert_eq!(Point::new(-1.0, 0.0, 0.0), (&full_quarter * p).unwrap());
 }
 
 #[test]
@@ -317,32 +320,32 @@ fn test_shearing() {
 
     assert_eq!(
         Point::new(5.0, 3.0, 4.0),
-        (Matrix::shearing(1.0, 0.0, 0.0, 0.0, 0.0, 0.0) * p).unwrap()
+        (&Matrix::shearing(1.0, 0.0, 0.0, 0.0, 0.0, 0.0) * p).unwrap()
     );
 
     assert_eq!(
         Point::new(6.0, 3.0, 4.0),
-        (Matrix::shearing(0.0, 1.0, 0.0, 0.0, 0.0, 0.0) * p).unwrap()
+        (&Matrix::shearing(0.0, 1.0, 0.0, 0.0, 0.0, 0.0) * p).unwrap()
     );
 
     assert_eq!(
         Point::new(2.0, 5.0, 4.0),
-        (Matrix::shearing(0.0, 0.0, 1.0, 0.0, 0.0, 0.0) * p).unwrap()
+        (&Matrix::shearing(0.0, 0.0, 1.0, 0.0, 0.0, 0.0) * p).unwrap()
     );
 
     assert_eq!(
         Point::new(2.0, 7.0, 4.0),
-        (Matrix::shearing(0.0, 0.0, 0.0, 1.0, 0.0, 0.0) * p).unwrap()
+        (&Matrix::shearing(0.0, 0.0, 0.0, 1.0, 0.0, 0.0) * p).unwrap()
     );
 
     assert_eq!(
         Point::new(2.0, 3.0, 6.0),
-        (Matrix::shearing(0.0, 0.0, 0.0, 0.0, 1.0, 0.0) * p).unwrap()
+        (&Matrix::shearing(0.0, 0.0, 0.0, 0.0, 1.0, 0.0) * p).unwrap()
     );
 
     assert_eq!(
         Point::new(2.0, 3.0, 7.0),
-        (Matrix::shearing(0.0, 0.0, 0.0, 0.0, 0.0, 1.0) * p).unwrap()
+        (&Matrix::shearing(0.0, 0.0, 0.0, 0.0, 0.0, 1.0) * p).unwrap()
     );
 }
 
@@ -355,7 +358,7 @@ fn test_chain_transformations() {
 
     assert_eq!(
         Point::new(15.0, 0.0, 7.0),
-        (((translation * scaling).unwrap() * rotate).unwrap() * p).unwrap()
+        (&(&(&translation * &scaling).unwrap() * &rotate).unwrap() * p).unwrap()
     );
 
     let transform = Matrix::identity(4, 1.0)
@@ -366,5 +369,5 @@ fn test_chain_transformations() {
         .translate(10.0, 5.0, 7.0)
         .unwrap();
 
-    assert_eq!(Point::new(15.0, 0.0, 7.0), (transform * p).unwrap());
+    assert_eq!(Point::new(15.0, 0.0, 7.0), (&transform * p).unwrap());
 }

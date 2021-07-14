@@ -207,7 +207,7 @@ where
     where
         T: One + Default + Copy + Mul<Output = T> + AddAssign,
     {
-        Matrix::translation(x, y, z) * self
+        &Matrix::translation(x, y, z) * &self
     }
 
     pub fn scaling(x: T, y: T, z: T) -> Matrix<T>
@@ -227,7 +227,7 @@ where
     where
         T: One + Default + Copy + Mul<Output = T> + AddAssign,
     {
-        Matrix::scaling(x, y, z) * self
+        &Matrix::scaling(x, y, z) * &self
     }
 
     pub fn rotation(axis: Axis, radian: T) -> Matrix<T>
@@ -264,7 +264,7 @@ where
     where
         T: Float + One + Default + Copy + Mul<Output = T> + AddAssign,
     {
-        Matrix::rotation(axis, radian) * self
+        &Matrix::rotation(axis, radian) * &self
     }
 
     pub fn shearing(xy: T, xz: T, yx: T, yz: T, zx: T, zy: T) -> Matrix<T>
@@ -285,7 +285,7 @@ where
     where
         T: Float + One + Default + Copy + Mul<Output = T> + AddAssign,
     {
-        Matrix::shearing(xy, xz, yx, yz, zx, zy) * self
+        &Matrix::shearing(xy, xz, yx, yz, zx, zy) * &self
     }
 }
 
@@ -341,7 +341,7 @@ where
     }
 }
 
-impl<T> Mul for Matrix<T>
+impl<T> Mul for &Matrix<T>
 where
     T: Default + Copy + Mul<Output = T> + AddAssign,
 {
@@ -372,7 +372,7 @@ where
 }
 
 // Multiplying matrix with a point or vector
-impl<U> Mul<U> for Matrix<f64>
+impl<U> Mul<U> for &Matrix<f64>
 where
     U: IsTuple,
 {
@@ -380,19 +380,19 @@ where
     fn mul(self, rhs: U) -> Self::Output {
         //let mut output = U::new(0.0, 0.0, 0.0);
         let m = Matrix::from(rhs);
-        let temp = (self * m)?;
+        let temp = (self * &m)?;
         Ok(U::new(temp[0][0], temp[1][0], temp[2][0]))
     }
 }
 
-impl<T, const R: usize> Mul<[T; R]> for Matrix<T>
+impl<T, const R: usize> Mul<[T; R]> for &Matrix<T>
 where
     T: Default + Copy + Mul<Output = T> + AddAssign,
 {
     type Output = Result<Matrix<T>, MatrixError>;
     fn mul(self, rhs: [T; R]) -> Self::Output {
         let m2 = Matrix::from(rhs);
-        self * m2
+        self * &m2
     }
 }
 

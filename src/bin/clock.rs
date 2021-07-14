@@ -24,7 +24,7 @@ pub fn make_clock() {
         .rotate(Axis::Z, std::f64::consts::FRAC_PI_6)
         .unwrap();
     for _ in 1..num_points {
-        prev_point = (rotate.clone() * prev_point).unwrap();
+        prev_point = (&rotate * prev_point).unwrap();
         points.push(prev_point);
     }
 
@@ -35,7 +35,7 @@ pub fn make_clock() {
         0.,
     ))
     .unwrap();
-    let center = (translate.clone() * origin).unwrap();
+    let center = (&translate * origin).unwrap();
     canvas.write_pixel(
         center.0.x.round().to_usize().unwrap(),
         center.0.y.round().to_usize().unwrap(),
@@ -49,7 +49,7 @@ pub fn make_clock() {
     ))
     .unwrap();
     for p in points {
-        let point = ((translate.clone() * scale.clone()).unwrap() * p).unwrap();
+        let point = (&(&translate * &scale).unwrap() * p).unwrap();
         canvas.write_pixel(
             point.0.x.to_usize().unwrap(),
             point.0.y.to_usize().unwrap(),
