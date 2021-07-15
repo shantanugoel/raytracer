@@ -113,3 +113,14 @@ fn test_cross() {
     assert_eq!(expected_1, a.cross(b));
     assert_eq!(expected_2, b.cross(a));
 }
+
+#[test]
+fn test_reflection() {
+    let v = Vector::new(1.0, -1.0, 0.0);
+    let n = Vector::new(0.0, 1.0, 0.0);
+    assert_eq!(Vector::new(1.0, 1.0, 0.0), v.reflect(n));
+
+    let v2 = Vector::new(0.0, -1.0, 0.0);
+    let n2 = Vector::new(2.0_f64.sqrt() / 2.0, 2.0_f64.sqrt() / 2.0, 0.0);
+    assert_eq!(Vector::new(1.0, 0.0, 0.0), v2.reflect(n2));
+}

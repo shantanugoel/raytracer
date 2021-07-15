@@ -200,6 +200,10 @@ impl Vector {
     pub fn limit_precision(&self, num_places: i32) -> Self {
         Vector::from(self.0.limit_precision(num_places))
     }
+
+    pub fn reflect(&self, normal: Self) -> Self {
+        *self - normal * 2.0 * self.dot(normal)
+    }
 }
 
 impl From<Tuple> for Vector {
