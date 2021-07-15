@@ -2,6 +2,7 @@ use std::ops::Neg;
 
 use crate::{
     intersections::{Intersectable, Intersection},
+    materials::Material,
     matrix::{Matrix, MatrixError},
     rays::Ray,
     tuple::{Point, Vector},
@@ -12,6 +13,7 @@ pub struct Sphere {
     origin: Point,
     radius: f64,
     transform: Matrix<f64>,
+    material: Material,
 }
 
 impl Sphere {
@@ -21,11 +23,16 @@ impl Sphere {
             origin,
             radius,
             transform: m,
+            material: Material::default(),
         }
     }
 
     pub fn set_transform(&mut self, m: Matrix<f64>) {
         self.transform = m;
+    }
+
+    pub fn set_material(&mut self, m: Material) {
+        self.material = m;
     }
 
     pub fn normal_at(&self, p: Point) -> Result<Vector, MatrixError> {
