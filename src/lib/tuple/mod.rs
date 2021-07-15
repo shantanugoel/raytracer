@@ -42,6 +42,16 @@ impl Tuple {
             0.0,
         )
     }
+
+    pub fn limit_precision(&self, num_places: i32) -> Self {
+        let mut t = Tuple::new(self.x, self.y, self.z, self.w);
+        let factor = 10.0_f64.powi(num_places);
+        t.x = (self.x * factor).round() / factor;
+        t.y = (self.y * factor).round() / factor;
+        t.z = (self.z * factor).round() / factor;
+        t.w = (self.w * factor).round() / factor;
+        t
+    }
 }
 
 impl Add<Tuple> for Tuple {
@@ -164,7 +174,11 @@ impl PartialEq for Vector {
     }
 }
 
-impl Point {}
+impl Point {
+    pub fn limit_precision(&self, num_places: i32) -> Self {
+        Point::from(self.0.limit_precision(num_places))
+    }
+}
 
 impl Vector {
     pub fn magnitude(&self) -> f64 {
@@ -181,6 +195,10 @@ impl Vector {
 
     pub fn cross(&self, other: Vector) -> Vector {
         Vector::from(self.0.cross(other.0))
+    }
+
+    pub fn limit_precision(&self, num_places: i32) -> Self {
+        Vector::from(self.0.limit_precision(num_places))
     }
 }
 

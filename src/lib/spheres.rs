@@ -28,8 +28,12 @@ impl Sphere {
         self.transform = m;
     }
 
-    pub fn normal_at(&self, p: Point) -> Vector {
-        (p - self.origin).normalize()
+    pub fn normal_at(&self, p: Point) -> Result<Vector, MatrixError> {
+        let object_point = (&self.transform.inverse()? * p)?;
+        let object_normal = object_point - self.origin;
+        let mut world_normal = (&self.transform.inverse()?.transpose() * object_normal)?;
+        world_normal.0.w = 0.0;
+        Ok(world_normal.normalize())
     }
 }
 
@@ -59,6 +63,7 @@ impl Intersectable for Sphere {
 
 #[cfg(test)]
 mod tests {
+    use crate::matrix::Axis;
     use crate::tuple::IsTuple;
 
     use super::*;
@@ -74,17 +79,17 @@ mod tests {
         let s = Sphere::new(Point::new(0.0, 0.0, 0.0), 1.0);
         assert_eq!(
             Vector::new(1.0, 0.0, 0.0),
-            s.normal_at(Point::new(1.0, 0.0, 0.0))
+            s.normal_at(Point::new(1.0, 0.0, 0.0)).unwrap()
         );
 
         assert_eq!(
             Vector::new(0.0, 1.0, 0.0),
-            s.normal_at(Point::new(0.0, 1.0, 0.0))
+            s.normal_at(Point::new(0.0, 1.0, 0.0)).unwrap()
         );
 
         assert_eq!(
             Vector::new(0.0, 0.0, 1.0),
-            s.normal_at(Point::new(0.0, 0.0, 1.0))
+            s.normal_at(Point::new(0.0, 0.0, 1.0)).unwrap()
         );
 
         assert_eq!(
@@ -98,13 +103,40 @@ mod tests {
                 3.0_f64.sqrt() / 3.0,
                 3.0_f64.sqrt() / 3.0
             ))
+            .unwrap()
         );
 
-        let n = s.normal_at(Point::new(
-            3.0_f64.sqrt() / 3.0,
-            3.0_f64.sqrt() / 3.0,
-            3.0_f64.sqrt() / 3.0,
-        ));
+        let n = s
+            .normal_at(Point::new(
+                3.0_f64.sqrt() / 3.0,
+                3.0_f64.sqrt() / 3.0,
+                3.0_f64.sqrt() / 3.0,
+            ))
+            .unwrap();
         assert_eq!(n, n.normalize());
+    }
+
+    #[test]
+    fn test_sphere_normal_with_transformations() {
+        let mut s = Sphere::new(Point::new(0.0, 0.0, 0.0), 1.0);
+        s.set_transform(Matrix::translation(0.0, 1.0, 0.0));
+        let n1 = s.normal_at(Point::new(0.0, 1.70711, -0.70711)).unwrap();
+        let e1 = Vector::new(0.0, 0.70711, -0.70711);
+        assert_eq!(e1, n1.limit_precision(5));
+
+        s.set_transform(
+            Matrix::rotation(Axis::Z, std::f64::consts::PI / 5.0)
+                .scale(1.0, 0.5, 1.0)
+                .unwrap(),
+        );
+        let n2 = s
+            .normal_at(Point::new(
+                0.0,
+                2.0_f64.sqrt() / 2.0,
+                2.0_f64.sqrt().neg() / 2.0,
+            ))
+            .unwrap();
+        let e2 = Vector::new(0.0, 0.97014, -0.24254);
+        assert_eq!(e2, n2.limit_precision(5));
     }
 }
