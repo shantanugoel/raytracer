@@ -4,7 +4,7 @@ use crate::{
     intersections::{Intersectable, Intersection},
     matrix::{Matrix, MatrixError},
     rays::Ray,
-    tuple::Point,
+    tuple::{Point, Vector},
 };
 
 #[derive(Debug, Clone, PartialEq)]
@@ -26,6 +26,10 @@ impl Sphere {
 
     pub fn set_transform(&mut self, m: Matrix<f64>) {
         self.transform = m;
+    }
+
+    pub fn normal_at(&self, p: Point) -> Vector {
+        (p - self.origin).normalize()
     }
 }
 
@@ -63,5 +67,44 @@ mod tests {
     fn test_sphere_default_transformation() {
         let s = Sphere::new(Point::new(0.0, 0.0, 0.0), 1.0);
         assert_eq!(Matrix::identity(4, 1.0), s.transform);
+    }
+
+    #[test]
+    fn test_sphere_normal() {
+        let s = Sphere::new(Point::new(0.0, 0.0, 0.0), 1.0);
+        assert_eq!(
+            Vector::new(1.0, 0.0, 0.0),
+            s.normal_at(Point::new(1.0, 0.0, 0.0))
+        );
+
+        assert_eq!(
+            Vector::new(0.0, 1.0, 0.0),
+            s.normal_at(Point::new(0.0, 1.0, 0.0))
+        );
+
+        assert_eq!(
+            Vector::new(0.0, 0.0, 1.0),
+            s.normal_at(Point::new(0.0, 0.0, 1.0))
+        );
+
+        assert_eq!(
+            Vector::new(
+                3.0_f64.sqrt() / 3.0,
+                3.0_f64.sqrt() / 3.0,
+                3.0_f64.sqrt() / 3.0
+            ),
+            s.normal_at(Point::new(
+                3.0_f64.sqrt() / 3.0,
+                3.0_f64.sqrt() / 3.0,
+                3.0_f64.sqrt() / 3.0
+            ))
+        );
+
+        let n = s.normal_at(Point::new(
+            3.0_f64.sqrt() / 3.0,
+            3.0_f64.sqrt() / 3.0,
+            3.0_f64.sqrt() / 3.0,
+        ));
+        assert_eq!(n, n.normalize());
     }
 }
