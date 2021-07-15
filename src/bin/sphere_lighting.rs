@@ -16,14 +16,14 @@ fn main() {
     let ray_origin = Point::new(0.0, 0.0, -5.0);
     let wall_z = 10.0;
     let wall_size = 7.0;
-    let canvas_pixels = 200;
+    let canvas_pixels = 100;
     let pixel_size = wall_size / canvas_pixels.to_f64().unwrap();
     let half = wall_size / 2.0;
 
     let mut canvas = Canvas::new(canvas_pixels, canvas_pixels);
     // let color = Color::new(1.0, 0.0, 0.0);
     let mut shape = Sphere::new(Point::new(0.0, 0.0, 0.0), 1.0);
-    shape.material.color = Color::new(1.0, 0.2, 1.0);
+    shape.material.color = Color::new(0.4, 0.8, 0.4);
 
     // let m = Matrix::scaling(1.0, 0.5, 1.0);
     // let m = (&Matrix::shearing(1.0, 0.0, 0.0, 0.0, 0.0, 0.0) * &Matrix::scaling(0.5, 1.0, 1.0))
