@@ -1,11 +1,12 @@
 use crate::{
-    color::Color,
+    color::{Color, CommonColor},
     lights::PointLight,
     tuple::{Point, Vector},
 };
 
 #[derive(Debug, Clone, Copy, PartialEq)]
 pub struct Material {
+    pub color: Color,
     pub ambient: f64,
     pub diffuse: f64,
     pub specular: f64,
@@ -15,6 +16,7 @@ pub struct Material {
 impl Default for Material {
     fn default() -> Self {
         Material {
+            color: Color::new(1.0, 1.0, 1.0),
             ambient: 0.1,
             diffuse: 0.9,
             specular: 0.9,
@@ -27,11 +29,34 @@ impl Material {
     pub fn lighting(
         &self,
         light: PointLight,
-        position: Point,
+        point: Point,
         eyev: Vector,
         normalv: Vector,
     ) -> Color {
-        Color::new(1.0, 1.0, 1.0)
+        // Combine the surface color with the light's color/intensity
+        let effective_color = self.color * light.intensity;
+
+        // Find the direction to the light source
+        let lightv = (light.position - point).normalize();
+
+        // Compute the ambient contribution
+        let ambient = effective_color * self.ambient;
+
+        let light_dot_normal = lightv.dot(normalv);
+        let mut diffuse = CommonColor::Black.value();
+        let mut specular = CommonColor::Black.value();
+        if light_dot_normal.ge(&0.0) {
+            diffuse = effective_color * self.diffuse * light_dot_normal;
+
+            let reflectv = -lightv.reflect(normalv);
+            let reflect_dot_eye = reflectv.dot(eyev);
+            if reflect_dot_eye.gt(&0.0) {
+                let factor = reflect_dot_eye.powf(self.shininess);
+                specular = light.intensity * self.specular * factor;
+            }
+        }
+
+        ambient + diffuse + specular
     }
 }
 
@@ -84,6 +109,7 @@ mod tests {
         assert_eq!(
             Color::new(0.7364, 0.7364, 0.7364),
             m.lighting(light, position, eyev, normalv)
+                .limit_precision(4)
         );
     }
 
@@ -98,6 +124,7 @@ mod tests {
         assert_eq!(
             Color::new(1.6364, 1.6364, 1.6364),
             m.lighting(light, position, eyev, normalv)
+                .limit_precision(4)
         );
     }
 
