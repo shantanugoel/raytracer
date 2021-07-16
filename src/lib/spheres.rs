@@ -5,7 +5,7 @@ use crate::{
     materials::Material,
     matrix::{Matrix, MatrixError},
     rays::Ray,
-    tuple::{Point, Vector},
+    tuple::{IsTuple, Point, Vector},
 };
 
 #[derive(Debug, Clone, PartialEq)]
@@ -14,6 +14,17 @@ pub struct Sphere {
     radius: f64,
     transform: Matrix<f64>,
     pub material: Material,
+}
+
+impl Default for Sphere {
+    fn default() -> Self {
+        Sphere {
+            origin: Point::new(0.0, 0.0, 0.0),
+            radius: 1.0,
+            transform: Matrix::identity(4, 1.0),
+            material: Material::default(),
+        }
+    }
 }
 
 impl Sphere {
